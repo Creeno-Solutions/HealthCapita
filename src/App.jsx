@@ -12,7 +12,8 @@ import OverviewPhrUpdate from './Pages/PHR/PhrNavbar/Overview/Allergies/Allergie
 
 
 
-function App() {
+
+function App()   {
   const location = useLocation()
   console.log(location)
   const HideHeaderandFooter = location.pathname === '/Login'
