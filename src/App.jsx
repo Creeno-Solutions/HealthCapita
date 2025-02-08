@@ -11,14 +11,10 @@ import Phr from "./Pages/PHR/Phr";
 import OverviewPhrUpdate from "./Pages/PHR/PhrNavbar/Overview/Allergies/AllergiesUpdate/OverviewPhrUpdate";
 
 
-<<<<<<< HEAD
-//creeno
-=======
 //for testing...
 //testinggg
 //chandu
 //shabana
->>>>>>> e429052e61c0399423b6ebfa330dc0cef05f1ad1
 function App() {
   const location = useLocation();
   console.log(location);
