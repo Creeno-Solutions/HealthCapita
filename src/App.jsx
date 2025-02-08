@@ -9,6 +9,8 @@ import Dashboard from "./Pages/PhrDashboard/Dashboard";
 import { useLocation } from "react-router-dom";
 import Phr from "./Pages/PHR/Phr";
 import OverviewPhrUpdate from './Pages/PHR/PhrNavbar/Overview/Allergies/AllergiesUpdate/OverviewPhrUpdate'
+
+//adding the changes
 function App()   {
   const location = useLocation()
   console.log(location)
