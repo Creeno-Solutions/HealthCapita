@@ -1,26 +1,26 @@
-import react from "react"
-import PhrProfile from "../../PhrProfile"
-import EmployerInfo from "./EmployerInfo"
-import EmergencyContactInfo from "./EmergencyContactInfo"
-// import MedicalContacts from "./MedicalContacts"
-import FamilyDetails from "./FamilyDetails"
-import InsuranceDetails from "./InsuranceDetails"
-import MedicalContacts from "./MedicalContacts"
+import EmergencyContactInfo from "./EmergencyContactInfo/EmergencyContactInfo";
+import EmployerInfo from "./EmployerInfo/EmployerInfo";
+import FamilyDetails from "./FamilyDetails/FamilyDetails";
+import InsuranceDetails from "./InsuranceDetails/InsuranceDetails";
+import MedicalContacts from "./MedicalContacts/MedicalContacts";
+import Allergies from "./OtherDetails/Allergies";
+import PhrProfile from "./PhrProfile/PhrProfile";
 
 const MainPersonalDetails = () => {
   return (
     <>
-      <div className="px-10">
-      <h2 className="text-2xl font-semibold py-3">Personal Details</h2>
+      <div className="px-12">
+        <h2 className="text-2xl font-semibold py-3">Personal Details</h2>
         <PhrProfile />
-        <InsuranceDetails/>
-        <EmployerInfo />
-        <FamilyDetails/>
-      <EmergencyContactInfo />
-        <MedicalContacts/>
-        </div>
+        <EmergencyContactInfo />
+        <FamilyDetails />
+        <MedicalContacts />
+        <InsuranceDetails />
+        <EmployerInfo/>
+        <Allergies />
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default MainPersonalDetails
+export default MainPersonalDetails;
