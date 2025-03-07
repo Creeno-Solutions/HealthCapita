@@ -36,7 +36,11 @@ function App() {
 
 
 
+
   
+
+
+
   const location = useLocation();
   console.log(location);
   const HideHeaderandFooter = location.pathname === "/Login";
