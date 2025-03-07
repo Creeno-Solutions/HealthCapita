@@ -47,6 +47,25 @@ import DownArrow from './DownArrow.svg'
 import TickIcon from './TickIcon.svg'
 import Insurance from './Insurance.svg'
 import ThreeDotted from './ThreeDotted.svg'
+import LifeStyle_icon from './LifeStyle_icon.svg'
+import BloodPressure from './BloodPressure.svg' 
+import File from './File.svg'
+import BloodSugar from './BloodSugar.svg'
+import BloodTest from './BloodTest.svg'
+import Cholestrol from './Cholestrol.svg'
+import Hdl from './Hdl.svg'
+import Ldl from './Ldl.svg'
+import MoodAndStress from './MoodAndStress.svg'
+import Triglycerides from './Triglycerides.svg'
+import Weight from './Weight.svg'
+import Delete from './Delete.svg'
+import Edit from './Edit.svg'
+import UploadIcon from './UploadIcon.svg'
+import AMicon from './AMicon.svg'
+import Afternoon from './Afternoon.svg'
+import Night from './Night.svg'
+import AddPrescribedIcon from './AddPrescribedIcon.svg'
+import AddMedicalIcon from './AddMedicalIcon.svg'
 
  export const PhrAssets = {
    Profile, 
@@ -99,4 +118,23 @@ import ThreeDotted from './ThreeDotted.svg'
    TickIcon,
    Insurance,
    ThreeDotted,
+   LifeStyle_icon,
+   BloodPressure,
+   File,
+   BloodSugar,
+   BloodTest,
+   Cholestrol,
+   Hdl,
+   Ldl,
+   MoodAndStress,
+   Triglycerides,
+   Weight,
+   Delete,
+   Edit,
+   UploadIcon,
+   AMicon,
+   Afternoon,
+   Night,
+   AddPrescribedIcon,
+   AddMedicalIcon
 }

@@ -19,7 +19,8 @@ import AddFamilyMember from './AddFamilyMember.svg'
 import ReferToFriends from './ReferToFriends.svg'
 import Archives from './Archives.svg'
 import JohnProfile from './JohnProfile.svg'
-import  Qrcode from './Qrcode.svg'
+import Qrcode from './Qrcode.svg'
+import MainLogo from './MainLogo.svg'
 
 export const HomeAssets = {
     bell,
@@ -43,5 +44,6 @@ export const HomeAssets = {
     ReferToFriends,
     Archives,
     JohnProfile,
-    Qrcode
+    Qrcode,
+    MainLogo
 }
