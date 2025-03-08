@@ -32,13 +32,7 @@ import MedicalAndSurgery from "./Pages/PHR/PhrNavbar/MedicalSurgery/MedicalAndSu
 
 function App() {
 
-
-
-
-
-
   
-
   const location = useLocation();
   console.log(location);
   const HideHeaderandFooter = location.pathname === "/Login";
