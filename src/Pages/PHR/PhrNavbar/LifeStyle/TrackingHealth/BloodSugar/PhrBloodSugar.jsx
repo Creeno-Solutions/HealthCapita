@@ -1,57 +1,80 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PhrAssets } from "../../../../../../assets/PHR/assets";
-import Update from "../../../../../../CommonComponents/Update/Update";
 import AddBtn from "../../../../../../CommonComponents/AddBtn/AddBtn";
 import { useNavigate } from "react-router-dom";
+import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
+import axios from "axios";
 
 const PhrBloodSugar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const openBloodSugarUpdatepage = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate('/BloodSugarUpdate')
-  }
-  const [optionsVisible, setOptionsVisible] = useState(null);
-  const [dropdownVisible, setDropdownVisible] = useState(null);
-  const data = [
-    {
-      id: 1,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      systolic: "Medical",
-      diastolic: "Cardiology",
-    },
-    {
-      id: 2,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      systolic: "Medical",
-      diastolic: "Dermatology",
-    },
-    {
-      id: 3,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      systolic: "Medical",
-      diastolic: "ENT",
-    },
-    {
-      id: 4,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      systolic: "Medical",
-      diastolic: "Oncology",
-    },
-  ];
-
-  const toggleOptions = (id) => {
-    setOptionsVisible((prev) => (prev === id ? null : id));
+  const openBloodSugarAddPage = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/BloodSugarUpdate");
+  };
+  const id = 10;
+  const openBloodSugarUpdatePage = (BloodSugarId) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/BloodSugarUpdate", { state: { BloodSugarId } });
   };
 
-  const handleOptionClick = (option, id) => {
-    console.log(`Option "${option}" selected for row ID ${id}`);
-    setDropdownVisible(null);
+  const handleDelete = async (BloodSugarId) => {
+    try {
+      const response = await axios.post(
+        `https://service.healthcapita.com/api/PHR/DeletePhrBloodSugarByIdbloodsugarIduserId?bloodsugarId=${BloodSugarId}&userId=${id}`
+      );
+      // console.log("deletesugar", response?.data?.status);
+      if (response?.data?.status) {
+        const deletedData = await axios.get(
+          `https://service.healthcapita.com/api/PHR/GetPhrBloodSugar?userId=${id}`
+        );
+        setData(deletedData?.data?.data || []);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const [showBloodSugarForm, setShowBloodSugarForm] = useState(false);
+
+  const [data, setData] = useState([]);
+  const [selectedContact, setSelectedConatct] = useState(null);
+
+  const openBloodSugarForm = async (BloodSugarId) => {
+    setShowBloodSugarForm(true);
+    try {
+      const response = await axios.get(
+        `https://service.healthcapita.com/api/PHR/GetPhrBloodSugarById/${BloodSugarId}/${id}`
+      );
+      setSelectedConatct(response?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const closeBloodSugarForm = () => {
+    setShowBloodSugarForm(false);
+    setSelectedConatct(null);
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await axios.get(
+          `https://service.healthcapita.com/api/PHR/GetPhrBloodSugar?userId=${id}`
+        );
+        // console.log("bloodSugar", response?.data?.data);
+        if (response?.data?.status) {
+          setData(response?.data?.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getData();
+  }, []);
+
   return (
     <>
       <div className="py-3 px-2 bg-[#F9FAFB] rounded-md">
@@ -66,11 +89,11 @@ const PhrBloodSugar = () => {
               Blood Sugar
             </p>
           </div>
-          <AddBtn onClick={openBloodSugarUpdatepage} />
+          <AddBtn onClick={openBloodSugarAddPage} />
         </div>
         <p className="border border-gray-300 px-2 my-4"></p>
 
-        <div className="overflow-x-auto rounded-md border  ">
+        <div className="overflow-x-auto rounded-md border">
           <table className="min-w-full bg-white">
             <thead>
               <tr className="bg-[#D1D5DB]">
@@ -88,32 +111,42 @@ const PhrBloodSugar = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((item) => (
-                <tr key={item.id}>
-                  <td className="pl-1 py-4 text-sm text-gray-900 border-b">
+              {data.map((item, index) => (
+                <tr key={index}>
+                  <td className="pl-1 py-4 text-sm text-gray-900 border-b cursor-pointer">
                     <img
-                      src={item.icon}
-                      onClick={() => toggleOptions(item.id)}
+                      src={PhrAssets.ThreeDotted}
+                      onClick={() => openBloodSugarForm(item.BloodSugarId)}
                       alt="Options"
                       className="w-6 h-6"
                     />
                   </td>
-                  <td className="px-4 py-4 text-base text-[#004EBA] border-b font-semibold">
-                    {item.date}
+                  <td
+                    onClick={() => openBloodSugarForm(item.BloodSugarId)}
+                    className="px-4 py-4 text-base text-[#004EBA] border-b font-semibold cursor-pointer"
+                  >
+                    {item.TestDate}
                   </td>
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
-                    {item.systolic}
+                    {item.Fasting}
                   </td>
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
-                    {item.diastolic}
+                    {item.PostPrandial}
                   </td>
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
                     <div className="flex gap-4 items-center">
-                      <button onClick={openBloodSugarUpdatepage}>
+                      <button
+                        onClick={() =>
+                          openBloodSugarUpdatePage(item.BloodSugarId)
+                        }
+                      >
                         <img src={PhrAssets.Edit} alt="" />
                       </button>
 
-                      <button className="flex gap-1 items-center  font-semibold">
+                      <button
+                        onClick={() => handleDelete(item.BloodSugarId)}
+                        className="flex gap-1 items-center  font-semibold"
+                      >
                         <img src={PhrAssets.Delete} alt="" />
                       </button>
                     </div>
@@ -124,6 +157,83 @@ const PhrBloodSugar = () => {
           </table>
         </div>
       </div>
+
+      {showBloodSugarForm && selectedContact && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[50%] relative overflow-y-auto  scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+            <div className="pt-2 px-6 mx-auto pb-10">
+              <div className="flex justify-between items-center">
+                <h2 className="font-semibold text-2xl">
+                  Blood Sugar Information
+                </h2>
+                <img
+                  src={PhrAssets.Close}
+                  alt=""
+                  onClick={closeBloodSugarForm}
+                  className="cursor-pointer"
+                />
+              </div>
+              <p className=" border border-b-1 border-gray-400 my-6"></p>
+
+              <div className="grid sm:grid-cols-3 gap-8 mb-4">
+                <div className="flex flex-col gap-1">
+                  <p>Fasting(mg/dl)</p>
+                  <p className="font-semibold">{selectedContact.fasting}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Post Prandial(mg/dl)</p>
+                  <p className="font-semibold">
+                    {selectedContact.postPrandial}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Random(mg/dl)</p>
+                  <p className="font-semibold">{selectedContact.random}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>HbA1C(%)</p>
+                  <p className="font-semibold">{selectedContact.hbac}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Date of Entry</p>
+                  <p className="font-semibold">{selectedContact.testDate}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Physician Specialist</p>
+                  <p className="font-semibold">
+                    {selectedContact.physicianSpecialist}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Primary Care Physician</p>
+                  <p className="font-semibold">
+                    {selectedContact.primaryCarePhysician}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Comments</p>
+                  <p className="font-semibold">{selectedContact.comments}</p>
+                </div>
+              </div>
+
+              <div>
+                <UpdateDetailsBtn
+                  onClick={() =>
+                    openBloodSugarUpdatePage(selectedContact.bloodSugarId)
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

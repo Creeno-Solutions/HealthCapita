@@ -2,16 +2,38 @@ import React from "react";
 import { PhrAssets } from "../../../../../assets/PHR/assets";
 import Update from "../../../../../CommonComponents/Update/Update";
 import {useNavigate} from "react-router-dom"
-const PhrProfile = ({ showUpdateButton = true}) => {
+import { useEffect, useState } from "react";
+import axios from "axios";
+import UserInfo from "../../../../../utils/UserInfo";
+import PlusAddBtn from "../../../../../CommonComponents/PlusAddBtn/PlusAddBtn";
 
-  const navigate = useNavigate()
+const PhrProfile = ({ showUpdateButton = true }) => {
+  const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const userId = UserInfo();
+  const navigate = useNavigate();
 
   const openPhrProfileUpdatePage = () => {
-    // Scroll the page to the top smoothly
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  
-    navigate("/PhrProfileUpdate")
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/PhrProfileUpdate");
+  };
+  console.log("formdata.....", formData);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://service.healthcapita.com/api/PHR/GetMemberById?UserId=${userId}`
+        );
+        if (response?.data?.isData === true) {
+          setFormData(response?.data?.data);
+        }
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [userId]);
 
   return (
     <>
@@ -20,28 +42,33 @@ const PhrProfile = ({ showUpdateButton = true}) => {
           <div className="flex gap-4">
             <img src={PhrAssets.Profile} alt="profile" />
             <div className="flex flex-col gap-2">
-              <p className="font-semibold  landing-5 text-md">John Dsouza</p>
+              <p className="font-semibold  landing-5 text-md">
+                {formData.firstName}
+              </p>
               <div className="flex gap-1 text-[#374151] text-base">
                 <p>Indian(AmericanIndian)</p>
                 <p>. 34</p>
-                <p>. Male</p>
-                <p>. 06/02/1990</p>
+                <p>. {formData.gender}</p>
+                <p>. {formData.dateofBirth}</p>
               </div>
             </div>
           </div>
-          <div className="flex gap-2">
-            {showUpdateButton && <Update onClick={openPhrProfileUpdatePage} />}
+          <div className="flex gap-2 items-center justify-center">
+            <img src={PhrAssets.PlusAdd} alt="" />
+            {showUpdateButton && (
+              <PlusAddBtn onClick={openPhrProfileUpdatePage} />
+            )}
           </div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 py-4 px-3">
           <div className="flex flex-col text-sm landing-5">
-            <p className="text-[#6B7280]">Email</p>
+            <p className="text-[#6B7280]">{formData.email}</p>
             <p>healthcapita@gmail.com</p>
           </div>
 
           <div className="flex flex-col">
-            <p className="text-[#6B7280]">Alternative Email</p>
+            <p className="text-[#6B7280]">{formData.AlternateEmail}</p>
             <p>healthcapita@gmail.com</p>
           </div>
 
@@ -50,7 +77,7 @@ const PhrProfile = ({ showUpdateButton = true}) => {
               <img src={PhrAssets.Phone_icon} alt="phone" />
               <p className="text-[#6B7280]">Mobile</p>
             </div>
-            <p>+973-85236923</p>
+            <p>+973-{formData.mobile}</p>
           </div>
 
           <div className="flex flex-col">
@@ -58,7 +85,7 @@ const PhrProfile = ({ showUpdateButton = true}) => {
               <img src={PhrAssets.Landphone_icon} alt="phone" />
               <p className="text-[#6B7280]">Landline No</p>
             </div>
-            <p>+973-77000335</p>
+            <p>+973-{formData.phone}</p>
           </div>
 
           <div className="flex flex-col">
@@ -66,60 +93,57 @@ const PhrProfile = ({ showUpdateButton = true}) => {
               <img src={PhrAssets.Bloodgroup_icon} alt="phone" />
               <p className="text-[#6B7280]">Blood group</p>
             </div>
-            <p>O-ve</p>
+            <p>{formData.bolldGroupType}</p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[#6B7280]">Rhesus Factor</p>
-            <p>-ve</p>
+            <p>{formData.rhesusFactor}</p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[#6B7280]">Height:</p>
-            <p>5'-8"</p>
+            <p>{formData.height}</p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[#6B7280]">Weight:</p>
-            <p>52 kg</p>
+            <p>{formData.weight}</p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[#6B7280]">Marital status</p>
-            <p>Married</p>
+            <p>{formData.maritalStatusId}</p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[#6B7280]">Spouse name</p>
-            <p>Marry D'souza</p>
+            <p>{formData.spouseName}</p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[#6B7280]">No of children</p>
-            <p>2</p>
+            <p>{formData.noOfChildren}</p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[#6B7280]">Address</p>
-            <p>
-              31, Building 184, Road No-126,Block 338, Adliya, Kingdom Of
-              Bahrain
-            </p>
+            <p>{formData.address}</p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[#6B7280]">Area, Governate</p>
-            <p>06/02/1990</p>
+            <p>{formData.stateId}</p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[#6B7280]">P.O. Box</p>
-            <p>98723</p>
+            <p>{formData.pinCode}</p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[#6B7280]">Country</p>
-            <p>Bahrain</p>
+            <p>{formData.countryId}</p>
           </div>
         </div>
       </div>

@@ -1,27 +1,49 @@
-import axios from 'axios';
+import axios from "axios";
 import { useEffect, useState } from "react";
-import { Oval } from 'react-loader-spinner';
+import { Oval } from "react-loader-spinner";
+import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
 
-const DistinguishingMarks = () => {
-  const [data, setData] = useState({});
+const DistinguishingMarks = ({ setActiveTab }) => {
+  const [data, setData] = useState({
+    tattoo: "no",
+    scar: "no",
+    burnMark: "no",
+  });
+  const [colorMasterData, setColorMasterData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [visibleBirthMarks, setVisibleBirthMarks] = useState(1); // Default to 1 and update based on data
+  const [visibleBirthMarks, setVisibleBirthMarks] = useState(1);
+  const userId = 40;
+  //30, 40
+  const isPasswordProtected = false;
+  const isDisplayUnderSummaryPage = false;
+  // console.log(data);
 
   const GetDistinguishingMarksApi = async () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        'https://service.healthcapita.com/api/PHR/GetDistinguishMarkDetail?UserId=123'
+        `https://service.healthcapita.com/api/PHR/GetDistinguishMarkWithColorById?userId=${userId}`
       );
+
       const apiData = response?.data?.data || {};
-      setData(apiData);
+      const userDetails = apiData?.userDetails || {};
+      console.log(response);
 
-     
-      const existingBirthMarksCount = Object.keys(apiData)
-        .filter((key) => key.startsWith("birthMark") && apiData[key])
-        .length;
+      setData((prev) => ({
+        ...prev,
+        ...userDetails,
+        userId: userId,
+        tattoo: userDetails.tattoo || "no",
+        scar: userDetails.scar || "no",
+        burnMark: userDetails.burnMark || "no",
+      }));
 
-     
+      setColorMasterData(apiData?.colorMasterData || []);
+
+      const existingBirthMarksCount = Object.keys(userDetails).filter(
+        (key) => key.startsWith("birthMark") && userDetails[key]
+      ).length;
+
       setVisibleBirthMarks(existingBirthMarksCount || 1);
     } catch (err) {
       console.error(err);
@@ -40,10 +62,60 @@ const DistinguishingMarks = () => {
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = async () => {
+    // Ensure all 5 birth mark values are included in the data object
+    const updatedData = { ...data };
+    for (let i = 1; i <= 5; i++) {
+      if (!updatedData[`birthMark${i}`]) {
+        updatedData[`birthMark${i}`] = ""; // Set to an empty string if not present
+      }
+    }
+
+    const payload = {
+      userId: userId,
+      isPasswordProtected,
+      isdisplayUnderSummaryPage: isDisplayUnderSummaryPage,
+      ...updatedData,
+    };
+
+    console.log("Payload to be sent:", payload);
+
+    try {
+      const response = await axios.post(
+        "https://service.healthcapita.com/api/PHR/SaveDistinguishMarkAndColor",
+        payload
+      );
+      console.log("Full response:", response?.data?.status);
+      if (
+        response?.data?.status === true ||
+        response?.data?.status === "true" ||
+        response?.data?.status === 1
+      ) {
+        console.log("Data saved successfully!");
+        setActiveTab(3);
+      } else {
+        console.error("Failed to save data. Response:", response?.data);
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <Oval visible={true} height="40" width="40" color="#4fa94d" ariaLabel="oval-loading" />
+        <Oval
+          visible={true}
+          height="40"
+          width="40"
+          color="#4fa94d"
+          ariaLabel="oval-loading"
+        />
       </div>
     );
   }
@@ -54,124 +126,141 @@ const DistinguishingMarks = () => {
     { label: "Burn Mark", key: "burnMark" },
   ];
 
-  return (
-    <div className="px-2 my-3 overflow-hidden">
-      {/* Birth Marks */}
-      <p className="text-sm">Birth Mark</p>
-      <div className="space-y-3">
-        {[...Array(visibleBirthMarks)].map((_, index) => (
-          <input
-            key={index}
-            className="mr-3 w-1/3 my-3 py-1 px-3 border rounded-md border-gray-300 placeholder:text-black placeholder:text-sm"
-            type="text"
-            placeholder={`Enter Birth Mark ${index + 1}`}
-            value={data?.[`birthMark${index + 1}`] || ""}
-            onChange={(e) => setData({ ...data, [`birthMark${index + 1}`]: e.target.value })}
-          />
-        ))}
-      </div>
-      {visibleBirthMarks < 5 && (
-        <button
-          onClick={handleAddAlternativeMark}
-          className="text-[#1C9401] pb-3 text-base font-semibold tracking-wide"
-        >
-          + Add Alternative Marks
-        </button>
-      )}
+  const renderOptions = (tabName) => {
+    return colorMasterData
+      .filter((item) => item.tabName.toLowerCase() === tabName.toLowerCase())
+      .map((item) => (
+        <option key={item.id} value={item.id}>
+          {item.colorName}
+        </option>
+      ));
+  };
 
-      {/* Tattoo, Scar, Burn Mark */}
-      <div className="flex justify-between gap-6">
-        {distinguishingMarks.map(({ label, key }, index) => {
-          const value = data?.[key]?.toLowerCase();
-          return (
-            <div key={index} className="flex flex-col gap-3 pt-3">
+  return (
+    <>
+      <div className="px-2 mb-3 pt-3 pb-4 overflow-hidden">
+        <p className="text-sm">Birth Mark</p>
+        <div className="space-y-3">
+          {[...Array(visibleBirthMarks)].map((_, index) => (
+            <input
+              key={index}
+              className="mr-3 w-1/4 my-3 py-1 px-3 border rounded-md border-gray-300 placeholder:text-sm focus:outline-none"
+              type="text"
+              placeholder={`Enter Birth Mark ${index + 1}`}
+              value={data[`birthMark${index + 1}`] || ""}
+              onChange={(e) =>
+                setData((prev) => ({
+                  ...prev,
+                  [`birthMark${index + 1}`]: e.target.value,
+                }))
+              }
+            />
+          ))}
+        </div>
+        {visibleBirthMarks < 5 && (
+          <button
+            onClick={handleAddAlternativeMark}
+            className="text-[#1C9401] pb-3 text-base font-semibold tracking-wide"
+          >
+            + Add Alternative Marks
+          </button>
+        )}
+
+        <div className="flex justify-between items-center">
+          {distinguishingMarks.map(({ label, key }) => (
+            <div key={key} className="pt-3">
               <p className="font-semibold text-base tracking-wide">{label}</p>
-              <div className="flex flex-row gap-3 justify-between">
-                <div className="flex items-center gap-2">
+              <div className="flex gap-3">
+                <label>
                   <input
-                    className="custom-radio"
                     type="radio"
                     name={key}
-                    checked={value === "yes"}
-                    onChange={() => setData({ ...data, [key]: "yes" })}
-                  />
-                  <label>Yes</label>
-                </div>
-                <div className="flex items-center gap-2">
+                    value="yes"
+                    checked={data[key] === "yes"}
+                    onChange={handleChange}
+                  />{" "}
+                  Yes
+                </label>
+                <label>
                   <input
-                    className="custom-radio"
                     type="radio"
                     name={key}
-                    checked={value !== "yes"} // Default to "No"
-                    onChange={() => setData({ ...data, [key]: "no" })}
-                  />
-                  <label>No</label>
-                </div>
+                    value="no"
+                    checked={data[key] === "no"}
+                    onChange={handleChange}
+                  />{" "}
+                  No
+                </label>
               </div>
             </div>
-          );
-        })}
+          ))}
+        </div>
+
+        <div className="grid grid-cols-3 gap-4 mt-5">
+          <div>
+            <label className="font-semibold text-base tracking-wide">
+              Hair Color
+            </label>
+            <select
+              value={data.hairColorId || ""}
+              onChange={(e) =>
+                setData((prev) => ({ ...prev, hairColorId: e.target.value }))
+              }
+              className="h-10 w-full mt-1"
+            >
+              <option value="">Select Hair Color</option>
+              {renderOptions("Hair Color")}
+            </select>
+          </div>
+
+          <div>
+            <label className="font-semibold text-base tracking-wide">
+              Skin Color
+            </label>
+            <select
+              value={data.skinId || ""}
+              onChange={(e) =>
+                setData((prev) => ({ ...prev, skinId: e.target.value }))
+              }
+              className="h-10 w-full mt-1"
+            >
+              <option value="">Select Skin Color</option>
+              {renderOptions("Skin Color")}
+            </select>
+          </div>
+
+          <div>
+            <label className="font-semibold text-base tracking-wide">
+              Eye Color
+            </label>
+            <select
+              value={data.eyeColorId || ""}
+              onChange={(e) =>
+                setData((prev) => ({ ...prev, eyeColorId: e.target.value }))
+              }
+              className="h-10 w-full mt-1"
+            >
+              <option value="">Select Eye Color</option>
+              {renderOptions("Eye Color")}
+            </select>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <textarea
+            value={data.otherMarks || ""}
+            placeholder="Enter other distinguishing marks"
+            onChange={(e) =>
+              setData((prev) => ({ ...prev, otherMarks: e.target.value }))
+            }
+            className="w-full p-4"
+          />
+        </div>
       </div>
 
-      {/* Hair Color */}
-      <div className="pt-5">
-        <p className="text-sm">Hair Color</p>
-        <select
-          className="my-2 pl-2 pr-48 py-1 border"
-          value={data?.hairColorId || ""}
-          onChange={(e) => setData({ ...data, hairColorId: e.target.value })}
-        >
-          <option value="">Select</option>
-          <option value="1">Black</option>
-          <option value="2">Brown</option>
-          <option value="3">Blonde</option>
-        </select>
-      </div>
-
-      {/* Skin Color */}
-      <div className="py-3">
-        <p className="text-sm">Skin Color</p>
-        <select
-          className="my-2 pl-2 pr-48 py-1 border"
-          value={data?.skinId || ""}
-          onChange={(e) => setData({ ...data, skinId: e.target.value })}
-        >
-          <option value="">Select</option>
-          <option value="1">Fair</option>
-          <option value="2">Medium</option>
-          <option value="3">Dark</option>
-        </select>
-      </div>
-
-      {/* Eye Color */}
-      <div className="py-3">
-        <p className="text-sm">Eye Color</p>
-        <select
-          className="my-2 pl-2 pr-48 py-1 border"
-          value={data?.eyeColorId || ""}
-          onChange={(e) => setData({ ...data, eyeColorId: e.target.value })}
-        >
-          <option value="">Select</option>
-          <option value="1">Brown</option>
-          <option value="2">Blue</option>
-          <option value="3">Green</option>
-        </select>
-      </div>
-
-      {/* Other Distinguishing Marks */}
-      <div>
-        <p className="py-4 font-semibold text-base tracking-wide">Other Distinguishing Marks</p>
-        <textarea
-          className="w-full h-20 bg-white border border-gray-200 rounded-lg p-2"
-          value={data?.otherMarks || ""}
-          placeholder="Enter other distinguishing marks"
-          onChange={(e) => setData({ ...data, otherMarks: e.target.value })}
-        />
-      </div>
-    </div>
+      <UpdateDetailsBtn onClick={handleSave} />
+    </>
   );
 };
 
 export default DistinguishingMarks;
-
-

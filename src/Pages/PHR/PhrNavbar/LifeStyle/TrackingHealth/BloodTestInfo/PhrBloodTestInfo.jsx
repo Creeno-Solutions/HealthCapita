@@ -1,66 +1,84 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PhrAssets } from "../../../../../../assets/PHR/assets";
 import AddBtn from "../../../../../../CommonComponents/AddBtn/AddBtn";
 import { useNavigate } from "react-router-dom";
+import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsbtn";
+import axios from "axios";
 
 const PhrBloodTestInfo = () => {
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-
-  const openBloodTestInfoUpdatePage = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate('/BloodTestInfoUpdate')
-  }
-  const [optionsVisible, setOptionsVisible] = useState(null);
-  const [dropdownVisible, setDropdownVisible] = useState(null);
-  const data = [
-    {
-      id: 1,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      Haemoglobin: "Medical",
-      WBC: "Cardiology",
-      RBC: "Cardiology",
-    },
-    {
-      id: 2,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      Haemoglobin: "Medical",
-      WBC: "Cardiology",
-      RBC: "Cardiology",
-    },
-    {
-      id: 3,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      Haemoglobin: "Medical",
-      WBC: "Cardiology",
-      RBC: "Cardiology",
-    },
-    {
-      id: 4,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      Haemoglobin: "Medical",
-      WBC: "Cardiology",
-      RBC: "Cardiology",
-    },
-  ];
-
-  const toggleOptions = (id) => {
-    setOptionsVisible((prev) => (prev === id ? null : id));
+  const openBloodTestInfoAddPage = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/BloodTestInfoUpdate");
+  };
+  const userId = 10;
+  const openBloodTestUpdatePage = (BloodTestInformationId) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/BloodTestInfoUpdate", { state: { BloodTestInformationId } });
   };
 
-  const handleOptionClick = (option, id) => {
-    console.log(`Option "${option}" selected for row ID ${id}`);
-    setDropdownVisible(null);
+  const handleDelete = async (BloodTestInformationId) => {
+    try {
+      const response = await axios.post(
+        `https://service.healthcapita.com/api/PHR/DeletePhrBloodTestInformationById?BloodTestInformationId=${BloodTestInformationId}&userId=${userId}`
+      );
+      // console.log("deleteBloodTest", response?.data?.status);
+      if (response?.data?.status) {
+        const deletedData = await axios.get(
+          `https://service.healthcapita.com/api/PHR/GetPhrBloodTestInformation?userId=${userId}`
+        );
+        setData(deletedData?.data?.data || []);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const [showBloodTestInfoForm, setShowBloodTestInfoForm] = useState(false);
+
+  const [data, setData] = useState([]);
+  const [selectedContact, setSelectedConatct] = useState({});
+
+  const openBloodTestInfoForm = async (BloodTestInformationId) => {
+    setShowBloodTestInfoForm(BloodTestInformationId);
+    try {
+      const response = await axios.get(
+        `https://service.healthcapita.com/api/PHR/GetPhrBloodTestInformationById/${BloodTestInformationId}/${userId}`
+      );
+      setSelectedConatct(response?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const closeBloodTestInfoForm = () => {
+    setShowBloodTestInfoForm(false);
+    setSelectedConatct(null);
+  };
+
+  useEffect(() => {
+    const getApiData = async () => {
+      try {
+        const response = await axios.get(
+          `https://service.healthcapita.com/api/PHR/GetPhrBloodTestInformation?userId=${userId}`
+        );
+        // console.log("bloodTestInfo", response?.data?.status);
+        if (response?.data?.status) {
+          setData(response?.data?.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getApiData();
+  }, []);
+
   return (
     <>
       <div className="py-3 px-2 bg-[#F9FAFB] rounded-md">
         <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <img
               className="w-[40px] h-[40px] p-2 rounded-full bg-[#004EBA]"
               src={PhrAssets.BloodTest}
@@ -70,7 +88,7 @@ const PhrBloodTestInfo = () => {
               Blood Test Information
             </p>
           </div>
-         <AddBtn onClick={openBloodTestInfoUpdatePage }/>
+          <AddBtn onClick={openBloodTestInfoAddPage} />
         </div>
         <p className="border border-gray-300 px-2 my-4"></p>
 
@@ -83,13 +101,13 @@ const PhrBloodTestInfo = () => {
                   Date of Test
                 </th>
                 <th className="py-3 text-left text-base font-medium px-4">
-                Haemoglobin
+                  Haemoglobin
                 </th>
                 <th className="py-3 text-left text-base font-medium px-4">
-                 WBC
+                  WBC
                 </th>
                 <th className="py-3 text-left text-base font-medium px-4">
-                 RBC
+                  RBC
                 </th>
                 <th className="py-3 text-left text-base font-medium px-4"></th>
               </tr>
@@ -97,48 +115,127 @@ const PhrBloodTestInfo = () => {
             <tbody>
               {data.map((item) => (
                 <tr key={item.id}>
-                  <td className="pl-1 py-4 text-sm text-gray-900 border-b">
+                  <td className="pl-1 py-4 text-sm text-gray-900 border-b cursor-pointer">
                     <img
-                      src={item.icon}
-                      onClick={() => toggleOptions(item.id)}
+                      src={PhrAssets.ThreeDotted}
+                      onClick={() =>
+                        openBloodTestInfoForm(item.BloodTestInformationId)
+                      }
                       alt="Options"
                       className="w-6 h-6"
                     />
                   </td>
-                  <td className="px-4 py-4 text-base text-[#004EBA] border-b font-semibold">
-                    {item.date}
+                  <td
+                    className="px-4 py-4 text-base text-[#004EBA] border-b font-semibold cursor-pointer"
+                    onClick={() =>
+                      openBloodTestInfoForm(item.BloodTestInformationId)
+                    }
+                  >
+                    {item.TestDate}
                   </td>
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
-                    {item.Haemoglobin}
+                    {item.Hemoglobin}
                   </td>
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
-                    {item.WBC}
+                    {item.Wbc}
                   </td>
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
-                    {item.RBC}
+                    {item.Rbc}
                   </td>
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
-                  <div className="flex gap-4 items-center">
-                      <button onClick={openBloodTestInfoUpdatePage }><img src={PhrAssets.Edit} alt="" /></button>
-                      
-                      <button className="flex gap-1 items-center  font-semibold">
+                    <div className="flex gap-4 items-center">
+                      <button
+                        onClick={() =>
+                          openBloodTestUpdatePage(item.BloodTestInformationId)
+                        }
+                      >
+                        <img src={PhrAssets.Edit} alt="" />
+                      </button>
+
+                      <button
+                        className="flex gap-1 items-center  font-semibold"
+                        onClick={() =>
+                          handleDelete(item.BloodTestInformationId)
+                        }
+                      >
                         <img src={PhrAssets.Delete} alt="" />
-                        
                       </button>
                     </div>
                   </td>
                 </tr>
               ))}
-              
             </tbody>
           </table>
-
-          
         </div>
       </div>
+
+      {showBloodTestInfoForm && selectedContact && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[50%] relative overflow-y-auto  scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+            <div className="pt-2 px-6 mx-auto  pb-10">
+              <div className="flex justify-between items-center">
+                <h2 className="font-semibold text-2xl">
+                  Blood Test Information
+                </h2>
+                <img
+                  src={PhrAssets.Close}
+                  alt=""
+                  onClick={closeBloodTestInfoForm}
+                  className="cursor-pointer"
+                />
+              </div>
+              <p className=" border border-b-1 border-gray-400 my-6"></p>
+
+              <div className="grid sm:grid-cols-3 gap-8 mb-4">
+                <div className="flex flex-col gap-1">
+                  <p>Haemoglobin</p>
+                  <p className="font-semibold">{selectedContact.hemoglobin}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>WBC</p>
+                  <p className="font-semibold">{selectedContact.wbc}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>RBC</p>
+                  <p className="font-semibold">{selectedContact.rbc}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Date of Entry</p>
+                  <p className="font-semibold">{selectedContact.testDate}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Physician Specialist</p>
+                  <p className="font-semibold">
+                    {selectedContact.physicianSpecialist}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Primary Care Physician</p>
+                  <p className="font-semibold">
+                    {selectedContact.primaryCarePhysician}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Comments</p>
+                  <p className="font-semibold">{selectedContact.comments}</p>
+                </div>
+              </div>
+
+              <div>
+                <UpdateDetailsBtn onClick={openBloodTestUpdatePage} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
 
 export default PhrBloodTestInfo;
-

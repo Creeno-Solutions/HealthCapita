@@ -28,7 +28,7 @@ const PhrUpdateHeader = ({ Title }) => {
         </header>
 
         {/* Main Section */}
-        <div className="px-2 md:p-5 xl:px-10 lg:px-4 sm:px-4 w-full">
+        {/* <div className="px-2 md:p-5 xl:px-10 lg:px-4 sm:px-4 w-full">
           <div className="pt-3 sm:pt-0 flex flex-col sm:flex-row sm:justify-between sm:mx-3 sm:items-center gap-3">
             <div className="flex flex-row sm:justify-between items-center gap-2">
               <img
@@ -69,7 +69,7 @@ const PhrUpdateHeader = ({ Title }) => {
             </div>
           </div>
           <p className="mx-2 border-b-2 border-gray-100 mt-4"></p>
-        </div>
+        </div> */}
         
     </>
   )

@@ -5,11 +5,13 @@ import { BrowserRouter } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DateProvider from "./utils/DateProvider.jsx";
+import store from "./store/store.jsx";
+import {Provider } from "react-redux";
 
 
 
 createRoot(document.getElementById("root")).render(
-  
+  <Provider store={store}>
   <BrowserRouter>
 <DateProvider>
     <App />
@@ -18,6 +20,7 @@ createRoot(document.getElementById("root")).render(
     <ToastContainer />
     </DateProvider>
   </BrowserRouter>
+  </Provider>
   
 
 );

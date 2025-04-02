@@ -1,6 +1,6 @@
 import { HraAssets } from "../assets/Hra/assets"
 
- const BASE_URL = 'https://service.healthcapita.com'
+ export const BASE_URL = 'https://service.healthcapita.com'
  
  export  const UserId = 69
 export const HraApiEndPoints = {

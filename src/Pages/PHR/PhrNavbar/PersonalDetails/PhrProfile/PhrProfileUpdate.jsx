@@ -1,375 +1,428 @@
-import PhrUpdateHeader from "../../../../../CommonComponents/PhrUpdateHeader/PhrUpdateHeader";
+import { useState, useEffect } from "react";
 import { PhrAssets } from "../../../../../assets/PHR/assets";
+import UserInfo from "../../../../../utils/UserInfo";
+import axios from "axios";
+import UpdateDetailsBtn from "../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
+import { useNavigate } from "react-router-dom";
+
 const PhrProfileUpdate = () => {
-  const formFields = [
-    {
-      id: "firstname",
-      label: "First Name",
-      type: "text",
-      placeholder: "Enter first name",
-    },
-    {
-      id: "middlename",
-      label: "Middle Name",
-      type: "text",
-      placeholder: "Enter middle name",
-    },
-    {
-      id: "lastname",
-      label: "Last Name",
-      type: "text",
-      placeholder: "Enter last name",
-    },
-    {
-      id: "dob",
-      label: "Date Of Birth",
-      type: "date",
-      placeholder: "Choose a date",
-    },
-    {
-      id: "gender",
-      label: "Gender",
-      type: "select",
-      options: ["Male", "Female", "Other"],
-      placeholder: "Select gender",
-    },
-    {
-      id: "email",
-      label: "Email",
-      type: "email",
-      placeholder: "Enter Your Email",
-    },
-    {
-      id: "mobile",
-      label: "Mobile Number",
-      type: "phone",
-      placeholder: "Enter Mobile Number",
-    },
+  const navigate = useNavigate();
+  const closePage = () => {
+    navigate("/phr");
+  };
+  const userId = UserInfo();
+  const [formData, setFormData] = useState({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    dateofBirth: "",
+    gender: "",
+    email: "",
+    mobile: "",
+    phone: "",
+    height: "",
+    weight: "",
+    BloodGroupType: "",
+    maritalStatusId: "",
+    spouseName: "",
+    noOfChildren: "",
+    address: "",
+    pinCode: "",
+    countryId: "",
+    stateId: "",
+    cityId: "",
+    rhesusFactor: "",
+    userId: userId,
+    OtherCity: "kakinada",
+    OtherState: "east godavari",
+    MembershipNo: "MembershipNo",
+    AlternateEmail: "chandrasekhargollapalli416@gmail.com",
+    isDisplayUnderSummary: false,
+    isPasswordProtected: false,
+  });
 
-    {
-      id: "phone",
-      label: "Landline No.",
-      type: "tel",
-      placeholder: "Enter Landline number",
-    },
-    {
-      id: "height",
-      label: "Height (ft.-inch)",
-      type: "select",
-      options: ["4'0''", "4'6''", "5'0''", "5'6''", "6'0''", "6'5''"],
-      placeholder: "Select height",
-    },
-    {
-      id: "weight",
-      label: "Weight (kgs)",
-      type: "number",
-      placeholder: "Enter weight",
-    },
-    {
-      id: "bloodgroup",
-      label: "Blood Group",
-      type: "select",
-      options: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
-      placeholder: "Select blood group",
-    },
-    {
-      id: "maritalstatus",
-      label: "Marital Status",
-      type: "select",
-      options: ["Married", "Unmarried"],
-      placeholder: "Select Status",
-    },
-    {
-      id: "spousename",
-      label: "Spouse Name",
-      type: "text",
-      placeholder: "Enter spouse name",
-    },
-    {
-      id: "noofchildren",
-      label: "No. of Children",
-      type: "number",
-      placeholder: "Enter no. of children",
-    },
-    {
-      id: "address",
-      label: "Address",
-      type: "textarea",
-      placeholder: "Enter your address",
-    },
-    {
-      id: "pobox",
-      label: "P.O. Box",
-      type: "number",
-      placeholder: "Enter P.O. box",
-    },
-    {
-      id: "country",
-      label: "Country",
-      type: "select",
-      options: ["India", "USA", "UK"],
-      placeholder: "Select Country",
-    },
-    {
-      id: "governate",
-      label: "Governate",
-      type: "select",
-      options: ["Northern", "Southern", "Other"],
-      placeholder: "Select Governate",
-    },
-    {
-      id: "area",
-      label: "Area",
-      type: "select",
-      options: ["A Ali", "JNTU", "Other"],
-      placeholder: "Select Area",
-    },
-  ];
+  console.log("helloooo");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://service.healthcapita.com/api/PHR/GetMemberById?UserId=${userId}`
+        );
+        if (response?.data?.isData === true) {
+          setFormData(response?.data?.data);
+        }
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch user data");
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [userId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // You can handle form submission here (e.g., make an API call)
+    try {
+      const response = await axios.post(
+        "https://service.healthcapita.com/api/PHR/SaveMemberDetails",
+        formData
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <div className="min-h-screen bg-white flex flex-col">
-        <PhrUpdateHeader Title={"Personal Details"} />
+        <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-4 px-4 sm:px-6 md:px-4 lg:px-12 bg-[#007183] shadow-md w-full">
+          <div className="flex items-center space-x-3">
+            <img src={PhrAssets.PhrIcon} alt="Logo" className="w-8 h-8" />
+            <p className="border border-r-0 h-6 border-white"></p>
+            <h2 className="md:text-3xl text-xl font-semibold text-white">
+              Edit Personal Health Record
+            </h2>
+          </div>
+          <button
+            onClick={closePage}
+            className="text-white text-xl font-semibold tracking-wide"
+          >
+            X <span className="hidden md:inline">Close</span>
+          </button>
+        </header>
+        <div className="px-2 md:p-5 xl:px-10 lg:px-4 sm:px-4 w-full">
+          <div className=" flex flex-col sm:flex-row sm:justify-between sm:mx-3 sm:items-center gap-3">
+            <div className="flex flex-row items-center gap-2">
+              <img
+                onClick={closePage}
+                className="text-black sm:w-6 cursor-pointer"
+                src={PhrAssets.ArrowLeft}
+                alt=""
+              />
+              <p className="border h-5 sm:h-6 sm:border-l-0 border-l-0 border-gray-400"></p>
+              <h2 className="md:text-xl text-base lg:text-2xl leading-5 font-semibold">
+                Personal Details
+              </h2>
+              <img
+                className="lg:mt-1 h-5 w-5 sm:w-6 sm:h-6"
+                src={PhrAssets.InfoCircle}
+                alt=""
+              />
+            </div>
+          </div>
+          <p className="mx-2 border-b-2 border-gray-100 mt-4"></p>
+        </div>
         <div className="w-[100%] flex">
-          <form className="py-4 px-4 sm:px-6 md:px-4 lg:px-12 w-[70%]">
+          <form
+            onSubmit={handleSubmit}
+            className="py-4 px-4 sm:px-6 md:px-4 lg:px-12 w-[70%]"
+          >
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
               <div className="col-span-3 flex gap-4">
-                {["firstname", "middlename", "lastname"].map((id) => {
-                  const field = formFields.find((f) => f.id === id);
-                  return (
-                    <div key={field.id} className="flex flex-col w-full">
-                      <label htmlFor={field.id}>{field.label}</label>
-                      <input
-                        type={field.type}
-                        placeholder={field.placeholder}
-                        id={field.id}
-                        name={field.id}
-                        className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none placeholder:text-sm placeholder:text-gray-400"
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Date of Birth & Gender (1 Row) */}
-              <div className="col-span-3 flex gap-4 items-center">
-                {["dob", "gender", "email"].map((id) => {
-                  const field = formFields.find((f) => f.id === id);
-                  return (
-                    <div key={field.id} className="flex flex-col w-full">
-                      <label htmlFor={field.id}>{field.label}</label>
-                      {field.type === "select" ? (
-                        <select
-                          id={field.id}
-                          name={field.id}
-                          className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none"
-                        >
-                          <option value="">{field.placeholder}</option>
-                          {field.options.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          type={field.type}
-                          placeholder={field.placeholder}
-                          id={field.id}
-                          name={field.id}
-                          className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none placeholder:text-sm placeholder:text-gray-400"
-                        />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="col-span-3 flex gap-4">
-  {["mobile", "phone"].map((id) => {
-    const field = formFields.find((f) => f.id === id);
-    return (
-      <div key={field.id} className="flex flex-col w-full">
-        <label htmlFor={field.id}>{field.label}</label>
-        <div className="flex items-center gap-2">
-          <select className="border border-gray-300 py-2 px-2 rounded-md focus:outline-none w-30">
-            <option value="+1">+1</option>
-            <option value="+91">+91</option>
-            <option value="+44">+44</option>
-            <option value="+61">+61</option>
-          </select>
-          <input
-            type={field.type}
-            placeholder={field.placeholder}
-            id={field.id}
-            name={field.id}
-            className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none placeholder:text-sm placeholder:text-gray-400"
-          />
-        </div>
-      </div>
-    );
-  })}
-</div>
-
-
-              {/* Height & Weight (Separate Row) */}
-              <div className="col-span-3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {["height", "weight"].map((id) => {
-                    const field = formFields.find((f) => f.id === id);
-                    return (
-                      <div key={field.id} className="flex flex-col">
-                        <label htmlFor={field.id}>{field.label}</label>
-                        <input
-                          type={field.type}
-                          placeholder={field.placeholder}
-                          id={field.id}
-                          name={field.id}
-                          className="border border-gray-300 py-2 px-3 rounded-md w-4/4 focus:outline-none placeholder:text-sm placeholder:text-gray-400"
-                        />
-                      </div>
-                    );
-                  })}
+                <div className="flex flex-col w-full">
+                  <label htmlFor="firstName">First Name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter First Name"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none "
+                  />
+                </div>
+                <div className="flex flex-col w-full">
+                  <label htmlFor="middleName">Middle Name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter Middle Name"
+                    value={formData.middleName}
+                    onChange={handleChange}
+                    name="middleName"
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none "
+                  />
+                </div>
+                <div className="flex flex-col w-full">
+                  <label htmlFor="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter Last Name"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    name="lastName"
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none "
+                  />
                 </div>
               </div>
 
-              {/* Blood Group Type & Rhesus Factor (Separate Row) */}
+              <div className="col-span-3 flex gap-4 items-center">
+                <div className="flex flex-col w-full">
+                  <label htmlFor="dob">Date Of Birth</label>
+                  <input
+                    type="date"
+                    name="dateofBirth"
+                    value={formData.dateofBirth}
+                    onChange={handleChange}
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none"
+                  />
+                </div>
+                <div className="flex flex-col w-full">
+                  <label htmlFor="gender">Gender</label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none"
+                  >
+                    <option value="">Select gender</option>
+                    <option value="m">Male</option>
+                    <option value="f">Female</option>
+                    <option value="o">Other</option>
+                  </select>
+                </div>
+                <div className="flex flex-col w-full">
+                  <label htmlFor="email">Email</label>
+                  <input
+                    type="email"
+                    placeholder="Enter Your Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    name="email"
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none "
+                  />
+                </div>
+              </div>
+
+              <div className="col-span-3 flex gap-4">
+                <div className="flex flex-col w-full">
+                  <label htmlFor="mobile">Mobile Number</label>
+                  <div className="flex items-center">
+                    <select className="h-[42px] border border-gray-300 border-r-0 rounded-l-md  bg-[#F9FAFB] focus:outline-none">
+                      <option value="+1">+1</option>
+                      <option value="+91">+91</option>
+                      <option value="+44">+44</option>
+                      <option value="+61">+61</option>
+                    </select>
+                    <input
+                      type="phone"
+                      placeholder="Enter Mobile Number"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleChange}
+                      className="h-[42px] border border-gray-300 rounded-r-md px-3  w-full focus:outline-none "
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col w-full">
+                  <label htmlFor="phone">Landline No.</label>
+                  <div className="flex items-center">
+                    <select className="h-[42px] border border-gray-300  rounded-l-md  border-r-0 bg-[#F9FAFB] focus:outline-none">
+                      <option value="+1">+1</option>
+                      <option value="+91">+91</option>
+                      <option value="+44">+44</option>
+                      <option value="+61">+61</option>
+                    </select>
+                    <input
+                      type="tel"
+                      placeholder="Enter Landline Number"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="h-[42px] border border-gray-300 rounded-r-md px-3 w-full focus:outline-none "
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-span-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col">
+                    <label htmlFor="height">Height (ft.-inch)</label>
+                    <input
+                      type="number"
+                      placeholder="Enter Height"
+                      name="height"
+                      value={formData.height}
+                      onChange={handleChange}
+                      className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none "
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label htmlFor="weight">Weight (kgs)</label>
+                    <input
+                      type="number"
+                      placeholder="Enter Weight"
+                      name="weight"
+                      value={formData.weight}
+                      onChange={handleChange}
+                      className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none "
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="col-span-3">
                 <div className="flex gap-4">
                   <div className="flex flex-col w-full">
                     <label htmlFor="bloodgroup">Blood Group Type</label>
                     <select
-                      id="bloodgroup"
-                      name="bloodgroup"
+                      name="BloodGroupType"
+                      value={formData.BloodGroupType}
+                      onChange={handleChange}
                       className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none"
                     >
                       <option value="">Select</option>
-                      {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
-                        (bg) => (
-                          <option key={bg} value={bg}>
-                            {bg}
-                          </option>
-                        )
-                      )}
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB">AB</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
                     </select>
                   </div>
                   <div className="flex flex-col w-full">
-                    <label htmlFor="rhesus">Rhesus Factor</label>
+                    <label htmlFor="bloodgroup">Rhesus Factor</label>
                     <select
-                      id="rhesus"
-                      name="rhesus"
+                      value={formData.rhesusFactor}
+                      onChange={handleChange}
+                      name="rhesusFactor"
                       className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none"
                     >
                       <option value="">Select</option>
-                      {["Positive", "Negative"].map((rf) => (
-                        <option key={rf} value={rf}>
-                          {rf}
-                        </option>
-                      ))}
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                      <option value="-ve">VE</option>
+                    </select>
+                  </div>
+                  <div className="flex flex-col w-full">
+                    <label htmlFor="maritalstatus">Marital Status</label>
+                    <select
+                      name="maritalStatusId"
+                      value={formData.maritalStatusId}
+                      onChange={handleChange}
+                      className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none"
+                    >
+                      <option value="">Select Status</option>
+                      <option value="1">Married</option>
+                      <option value="2">Unmarried</option>
                     </select>
                   </div>
                 </div>
               </div>
 
-              {/* Marital Status, Spouse Name, No. of Children (1 Row) */}
               <div className="col-span-3 flex gap-4">
-                {["maritalstatus", "spousename", "noofchildren"].map((id) => {
-                  const field = formFields.find((f) => f.id === id);
-                  return (
-                    <div key={field.id} className="flex flex-col w-full">
-                      <label htmlFor={field.id}>{field.label}</label>
-                      {field.type === "select" ? (
-                        <select
-                          id={field.id}
-                          name={field.id}
-                          className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none placeholder:text-sm placeholder:text-gray-400"
-                        >
-                          <option value="">{field.placeholder}</option>
-                          {field.options.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          type={field.type}
-                          placeholder={field.placeholder}
-                          id={field.id}
-                          name={field.id}
-                          className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none placeholder:text-sm placeholder:text-gray-400"
-                        />
-                      )}
-                    </div>
-                  );
-                })}
+                <div className="flex flex-col w-full">
+                  <label htmlFor="spousename">Spouse Name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter Spouse Name"
+                    name="spouseName"
+                    value={formData.spouseName}
+                    onChange={handleChange}
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none "
+                  />
+                </div>
+                <div className="flex flex-col w-full">
+                  <label htmlFor="noofchildren">No. Of Children</label>
+                  <input
+                    type="number"
+                    placeholder="Enter No. Of Children"
+                    name="noOfChildren"
+                    value={formData.noOfChildren}
+                    onChange={handleChange}
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none "
+                  />
+                </div>
               </div>
 
-              {/* P.O. Box, Country, Governate (1 Row) */}
               <div className="col-span-3 flex gap-4">
-                {["country", "governate", "pobox"].map((id) => {
-                  const field = formFields.find((f) => f.id === id);
-                  return (
-                    <div key={field.id} className="flex flex-col w-full">
-                      <label htmlFor={field.id}>{field.label}</label>
-                      {field.type === "select" ? (
-                        <select
-                          id={field.id}
-                          name={field.id}
-                          className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none"
-                        >
-                          <option value="">{field.placeholder}</option>
-                          {field.options.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          type={field.type}
-                          placeholder={field.placeholder}
-                          id={field.id}
-                          name={field.id}
-                          className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none placeholder:text-sm placeholder:text-gray-400"
-                        />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Area (1 Row) */}
-              <div className="col-span-4 flex gap-4">
-                <div className="flex flex-col w-1/4">
-                  <label htmlFor="area">Area</label>
+                <div className="flex flex-col w-full">
+                  <label htmlFor="pobox">Pin Code</label>
+                  <input
+                    type="number"
+                    placeholder="Enter P.O. Box"
+                    name="pinCode"
+                    value={formData.pinCode}
+                    onChange={handleChange}
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none "
+                  />
+                </div>
+                <div className="flex flex-col w-full">
+                  <label htmlFor="country">Country</label>
                   <select
-                    id="area"
-                    name="area"
+                    value={formData.countryId}
+                    onChange={handleChange}
+                    name="countryId"
                     className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none"
                   >
-                    <option value="">Select area</option>
-                    {formFields
-                      .find((f) => f.id === "area")
-                      .options.map((area) => (
-                        <option key={area} value={area}>
-                          {area}
-                        </option>
-                      ))}
+                    <option value="">Select Country</option>
+                    <option value="1">India</option>
+                    <option value="2">USA</option>
+                    <option value="3">UK</option>
+                  </select>
+                </div>
+                <div className="flex flex-col w-full">
+                  <label htmlFor="governate">Governate</label>
+                  <select
+                    value={formData.stateId}
+                    onChange={handleChange}
+                    name="stateId"
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none"
+                  >
+                    <option value="">Select Governate</option>
+                    <option value="1">Northern</option>
+                    <option value="2">Southern</option>
+                    <option value="3">Other</option>
                   </select>
                 </div>
               </div>
 
-              {/* Address (Full Width) */}
+              <div className="col-span-4 flex gap-4">
+                <div className="flex flex-col w-1/4">
+                  <label htmlFor="area">Area</label>
+                  <select
+                    value={formData.cityId}
+                    onChange={handleChange}
+                    name="cityId"
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none"
+                  >
+                    <option value="">Select area</option>
+                    <option value="1">A Ali</option>
+                    <option value="2">JNTU</option>
+                    <option value="3">Other</option>
+                  </select>
+                </div>
+              </div>
+
               <div className="col-span-3">
                 <div className="flex flex-col">
                   <label htmlFor="address">Address</label>
                   <textarea
-                    id="address"
                     name="address"
-                    placeholder="Enter your Address here.."
-                    rows="2  "
-                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none placeholder:text-sm placeholder:text-gray-400"
+                    value={formData.address}
+                    onChange={handleChange}
+                    placeholder="Enter Address"
+                    rows="2"
+                    className="border border-gray-300 py-2 px-3 rounded-md w-full focus:outline-none "
                   />
                 </div>
               </div>
@@ -409,31 +462,11 @@ const PhrProfileUpdate = () => {
         </div>
       </div>
 
-      <div className="relative">
-        <p className="mx-14 border-b-2 border-gray-100 my-5"></p>
-        <button className="bg-[#1C9401] text-white font-medium tracking-wide text-lg py-3 px-8 rounded-full absolute -bottom-20 right-8 mb-0 mr-4">
-          Update Details
-        </button>
+      <div>
+        <UpdateDetailsBtn onClick={handleSubmit} />
       </div>
     </>
   );
 };
 
 export default PhrProfileUpdate;
-
-//  <div className="w-full">
-// <div className="bg-blue-100 py-2 px-4 rounded-xl shadow-md">
-//   <h2 className="text-lg font-semibold text-gray-700 mb-2">Upload Image</h2>
-//   <div className="p-2 rounded-lg shadow-sm border border-gray-400 border-dashed py-2 px-4">
-//     <label className="flex items-center space-x-2 mb-2 cursor-pointer">
-//       <img src={PhrAssets.UploadIcon} alt="Upload Icon" className="w-6 h-6" />
-//       <span className="text-gray-600 font-medium">Upload Image</span>
-//       <input type="file" className="hidden" />
-//     </label>
-//     <div className="flex items-center space-x-2 pt-1">
-//       <img src={PhrAssets.InfoCircle} alt="Info Icon" className="w-6 h-6" />
-//       <span className="text-gray-500">Max file size: 10MB</span>
-//     </div>
-//   </div>
-// </div>
-// </div>

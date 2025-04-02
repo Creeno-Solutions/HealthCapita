@@ -7,29 +7,45 @@ import Ethnicity from "./Ethnicity";
 import InfantHistory from "./InfantHistory";
 import { useState } from "react";
 import SocialHistory from "./SocialHistory";
-
+import { useLocation } from "react-router-dom";
 const OverviewPhrUpdate = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const navigate = useNavigate();  
- 
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 0);
+  const [isPasswordProtected, setIsPasswordProtected] = useState(false);
+  const [isDisplayUnderSummaryPage, setIsDisplayUnderSummaryPage] =
+    useState(false);
+  const navigate = useNavigate();
+
   const closePage = () => {
     navigate("/phr");
   };
 
+  // Reset checkboxes when switching tabs
+  const handleTabChange = (index) => {
+    setActiveTab(index);
+    setIsPasswordProtected(false);
+    setIsDisplayUnderSummaryPage(false);
+  };
+
   const renderTabContent = () => {
+    const tabProps = {
+      isPasswordProtected,
+      isDisplayUnderSummaryPage,
+    };
+
     switch (activeTab) {
       case 0:
-        return <AllergiesAndDrugs />;
+        return <AllergiesAndDrugs setActiveTab={setActiveTab} />;
       case 1:
-        return <CurrentHealthStatus />;
+        return <CurrentHealthStatus setActiveTab={setActiveTab} />;
       case 2:
-        return <DistinguishingMarks />;
+        return <DistinguishingMarks setActiveTab={setActiveTab} />;
       case 3:
-        return <Ethnicity />;
+        return <Ethnicity setActiveTab={setActiveTab} />;
       case 4:
-        return <InfantHistory />;
+        return <InfantHistory setActiveTab={setActiveTab} />;
       case 5:
-        return <SocialHistory />;
+        return <SocialHistory closePage={closePage} />;
       default:
         return null;
     }
@@ -39,7 +55,7 @@ const OverviewPhrUpdate = () => {
     <>
       <div className="min-h-screen bg-white flex flex-col">
         {/* Header */}
-        <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-4 px-4 sm:px-6 md:px-4 lg:px-12 bg-[#001940] shadow-md w-full">
+        <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-4 px-4 sm:px-6 md:px-4 lg:px-12 bg-[#007183] shadow-md w-full">
           <div className="flex items-center space-x-3">
             <img src={PhrAssets.PhrIcon} alt="Logo" className="w-8 h-8" />
             <p className="border border-r-0 h-6 border-white"></p>
@@ -80,8 +96,10 @@ const OverviewPhrUpdate = () => {
             <div className="flex flex-col md:flex-row md:gap-2 lg:gap-5">
               <div className="flex items-center">
                 <input
-                  className="mr-1 lg:mr-2 border-none checked:bg-[#001940]"
                   type="checkbox"
+                  checked={isPasswordProtected}
+                  onChange={() => setIsPasswordProtected(!isPasswordProtected)}
+                  className="mr-1 lg:mr-2 border-none checked:bg-[#001940]"
                 />
                 <label className="text-[#001940] font-medium">
                   Protect with password
@@ -89,8 +107,12 @@ const OverviewPhrUpdate = () => {
               </div>
               <div className="flex items-center">
                 <input
-                  className="mr-1 lg:mr-2 border-none checked:bg-[#001940]"
                   type="checkbox"
+                  checked={isDisplayUnderSummaryPage}
+                  onChange={() =>
+                    setIsDisplayUnderSummaryPage(!isDisplayUnderSummaryPage)
+                  }
+                  className="mr-1 lg:mr-2 border-none checked:bg-[#001940]"
                 />
                 <label className="text-[#001940] font-medium">
                   Display under summary page
@@ -100,58 +122,41 @@ const OverviewPhrUpdate = () => {
           </div>
           <p className="mx-2 border-b-2 border-gray-100 mt-4"></p>
 
-           {/* Tabs and Content */}
-           <div className="flex flex-col lg:flex-row">
-  {/* Button Tabs */}
-  <div className="w-full sm:w-full lg:w-[30%] flex flex-row lg:flex-col overflow-x-auto lg:overflow-hidden gap-2 px-2 pt-10">
-    {[
-      "Allergies and Drugs Sensitivity",
-      "Current Health Status",
-      "Distinguishing Marks",
-      "Ethnicity",
-      "Infant History",
-      "Social History",
-      
-               
-    ].map((label, index) => (
-      <button
-        key={index}
-        onClick={() => setActiveTab(index)}
-        className={`flex-shrink-0 whitespace-nowrap px-2 lg:px-3 py-3 text-sm lg:text-base text-left font-semibold transition duration-300 ease-in-out ${
-          activeTab === index
-            ? "bg-[#EBF8FF] text-black hover:bg-[#1C9401] hover:text-white rounded-lg"
-            : "text-gray-500 hover:bg-[#F9FAFB] hover:rounded-se-full hover:rounded-ee-full"
-        }`}
-      >
-        {label}
-      </button>
-    ))}
-  </div>
-
-
+          {/* Tabs and Content */}
+          <div className="flex flex-col lg:flex-row">
+            {/* Button Tabs */}
+            <div className="w-full sm:w-full lg:w-[30%] flex flex-row lg:flex-col overflow-x-auto lg:overflow-hidden gap-2 px-2 pt-10">
+              {[
+                "Allergies and Drugs Sensitivity",
+                "Current Health Status",
+                "Distinguishing Marks",
+                "Ethnicity",
+                "Infant History",
+                "Social History",
+              ].map((label, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveTab(index)}
+                  className={`flex-shrink-0 whitespace-nowrap px-2 lg:px-3 py-3 text-sm lg:text-base text-left font-semibold transition duration-300 ease-in-out ${
+                    activeTab === index
+                      ? "bg-[#EBF8FF] text-black hover:bg-[#1C9401] hover:text-white rounded-lg"
+                      : "text-gray-500 hover:bg-[#F9FAFB] hover:rounded-se-full hover:rounded-ee-full"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
 
             {/* Content */}
-            <div className="overflow-y-auto max-h-[450px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 md:w-[85%]  bg-[#F9FAFB] px-4 py-3 mt-6 mb-16 h-auto rounded-lg ">
+            <div className="overflow-y-auto max-h-[450px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 md:w-[85%]  bg-[#F9FAFB] px-4 pt-3 pb-16 mt-6 mb-16 h-auto rounded-lg ">
               {renderTabContent()}
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Bottom Section */}
-      <div className="relative">
-        <p className="mx-14 border-b-2 border-gray-100 my-5"></p>
-        <button
-          
-          className="bg-[#1C9401] text-white font-medium tracking-wide text-lg py-3 px-8 rounded-full absolute -bottom-20 right-8 mb-0 mr-4"
-        >
-          Update Details
-        </button>
       </div>
     </>
   );
 };
 
 export default OverviewPhrUpdate;
-
-
