@@ -38,9 +38,6 @@ function App() {
   return (
     <>
 
-
-
-    
       {!HideHeaderandFooter && <Header />}
       <Routes>
         <Route path="/" element={<Navigate to="/Login" />} />
