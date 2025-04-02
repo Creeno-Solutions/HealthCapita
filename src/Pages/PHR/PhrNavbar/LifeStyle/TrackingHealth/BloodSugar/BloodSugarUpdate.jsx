@@ -7,6 +7,8 @@ import { useLocation } from "react-router-dom";
 import MedicationAndreminders from "../../../../../../CommonComponents/MedicationAndReminders/MedicationAndreminders";
 import PhrProtectwithPassword from "../../../../../../CommonComponents/PhrUpdateHeader/PhrProtectwithPassword";
 
+
+
 const BloodSugarUpdate = () => {
   const [showFields, setShowFields] = useState(false);
   const location = useLocation();
