@@ -37,7 +37,6 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
     email: "",
     dateOfBirth: "",
     age: 0,
-    countryCode: "",
     mobile: "",
     isPasswordProtected: false,
     isDisplayUnderSummary: false,
