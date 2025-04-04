@@ -163,8 +163,8 @@ const PhrBloodPressure = () => {
 
       {contactsUpdateForm && selectedContact && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[50%] relative overflow-y-auto h-[95%] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
-            <div className="pt-2 px-6 mx-auto h-96 pb-52">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[50%] relative overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+            <div className="pt-2 px-6 mx-auto pb-10">
               <div className="flex justify-between items-center">
                 <h2 className="font-semibold text-2xl">
                   Blood Pressure Information

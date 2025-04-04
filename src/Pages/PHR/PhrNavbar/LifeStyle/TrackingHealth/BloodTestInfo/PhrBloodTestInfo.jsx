@@ -231,9 +231,19 @@ const PhrBloodTestInfo = () => {
               </div>
 
               <div>
+<<<<<<< HEAD
                 <UpdateDetailsBtn  onClick={() =>
                           openBloodTestUpdatePage(selectedContact.bloodTestInformationId)
                         } />
+=======
+                <UpdateDetailsBtn
+                  onClick={() =>
+                    openBloodTestUpdatePage(
+                      selectedContact.BloodTestInformationId
+                    )
+                  }
+                />
+>>>>>>> cead2c8 (Updated Tracking Health)
               </div>
             </div>
           </div>
