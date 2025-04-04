@@ -74,7 +74,7 @@ const FamilyHistory = ({ onNextStep }) => {
           : [...members, member];
         return { ...item, keyMember: newMembers.join(", ") };
       }
-      return item;
+      return item; 
     });
     setFamilyHistory(updatedHistory);
   };

@@ -8,6 +8,8 @@ import InfantHistory from "./InfantHistory";
 import { useState } from "react";
 import SocialHistory from "./SocialHistory";
 import { useLocation } from "react-router-dom";
+import PhrUpdateHeader from "../../../../../../CommonComponents/PhrUpdateHeader/PhrUpdateHeader";
+import PhrProtectwithPassword from "../../../../../../CommonComponents/PhrUpdateHeader/PhrProtectwithPassword";
 const OverviewPhrUpdate = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(location.state?.activeTab || 0);
@@ -27,15 +29,26 @@ const OverviewPhrUpdate = () => {
     setIsDisplayUnderSummaryPage(false);
   };
 
-  const renderTabContent = () => {
-    const tabProps = {
-      isPasswordProtected,
-      isDisplayUnderSummaryPage,
-    };
+  const handleProtectChange = (value) => {
+    setIsPasswordProtected(value);
+  };
 
+  const handleDisplayChange = (value) => {
+    setIsDisplayUnderSummaryPage(value);
+  };
+
+  const renderTabContent = () => {
     switch (activeTab) {
       case 0:
-        return <AllergiesAndDrugs setActiveTab={setActiveTab} />;
+        return (
+          <AllergiesAndDrugs
+            setActiveTab={setActiveTab}
+            isPasswordProtected={isProtected}
+            isDisplayUnderSummaryPage={isDisplayed}
+            onDisplayChange={handleDisplayChange}
+            onProtectChange={handleProtectChange}
+          />
+        );
       case 1:
         return <CurrentHealthStatus setActiveTab={setActiveTab} />;
       case 2:
@@ -71,57 +84,14 @@ const OverviewPhrUpdate = () => {
             X <span className="hidden md:inline">Close</span>
           </button>
         </header>
-
-        {/* Main Section */}
         <div className="px-2 md:p-5 xl:px-10 lg:px-4 sm:px-4 w-full">
-          {/* Medical & Surgery */}
-          <div className="pt-3 sm:pt-0 flex flex-col sm:flex-row sm:justify-between sm:mx-3 sm:items-center gap-3">
-            <div className="flex flex-row sm:justify-between items-center gap-2">
-              <img
-                onClick={closePage}
-                className="text-black sm:w-6 cursor-pointer"
-                src={PhrAssets.ArrowLeft}
-                alt=""
-              />
-              <p className="border h-5 sm:h-6 sm:border-l-0 border-l-0 border-gray-400"></p>
-              <h2 className="md:text-xl text-base lg:text-2xl leading-5 font-semibold">
-                Other Details
-              </h2>
-              <img
-                className="lg:mt-1 h-5 w-5 sm:w-6 sm:h-6 md:w-6 md:h-6 lg:w-6"
-                src={PhrAssets.InfoCircle}
-                alt=""
-              />
-            </div>
-            <div className="flex flex-col md:flex-row md:gap-2 lg:gap-5">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={isPasswordProtected}
-                  onChange={() => setIsPasswordProtected(!isPasswordProtected)}
-                  className="mr-1 lg:mr-2 border-none checked:bg-[#001940]"
-                />
-                <label className="text-[#001940] font-medium">
-                  Protect with password
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={isDisplayUnderSummaryPage}
-                  onChange={() =>
-                    setIsDisplayUnderSummaryPage(!isDisplayUnderSummaryPage)
-                  }
-                  className="mr-1 lg:mr-2 border-none checked:bg-[#001940]"
-                />
-                <label className="text-[#001940] font-medium">
-                  Display under summary page
-                </label>
-              </div>
-            </div>
-          </div>
-          <p className="mx-2 border-b-2 border-gray-100 mt-4"></p>
-
+          <PhrProtectwithPassword
+            Title="Other Details"
+            isProtected={isPasswordProtected}
+            isDisplayed={isDisplayUnderSummaryPage}
+            onProtectChange={handleProtectChange}
+            onDisplayChange={handleDisplayChange}
+          />
           {/* Tabs and Content */}
           <div className="flex flex-col lg:flex-row">
             {/* Button Tabs */}

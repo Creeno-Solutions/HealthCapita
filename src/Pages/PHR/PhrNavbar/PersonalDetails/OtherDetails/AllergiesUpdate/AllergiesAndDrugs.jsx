@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Oval } from "react-loader-spinner";
-import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsbtn";
-
-const AllergiesAndDrugs = () => {
-  const [allergies, setAllergies] = useState({});
+import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
+import PhrUpdateHeader from "../../../../../../CommonComponents/PhrUpdateHeader/PhrUpdateHeader";
+import PhrProtectwithPassword from "../../../../../../CommonComponents/PhrUpdateHeader/PhrProtectwithPassword";
+const AllergiesAndDrugs = ({
+  setActiveTab,
+  isPasswordProtected,
+  isdisplayUnderSummaryPage,
+  setIsPasswordProtected,
+  setIsDisplayUnderSummaryPage,
+}) => {
+  const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
 
   const [selectedAllergies, setSelectedAllergies] = useState({});
@@ -29,7 +36,7 @@ const AllergiesAndDrugs = () => {
         return acc;
       }, {});
 
-      setAllergies(groupedAllergies);
+      setFormData(groupedAllergies);
 
       const initialSelections = {};
       data.forEach((allergy) => {
@@ -70,8 +77,10 @@ const AllergiesAndDrugs = () => {
   const sendUpdatedAllergies = async () => {
     const updatedData = Array.from(updatedAllergies)
       .map((id) => {
-        for (const group in allergies) {
-          const allergy = allergies[group].find(
+        for (const group in formData) {
+          //formData
+          const allergy = formData[group].find(
+            //formData
             (item) => item.allergyDetailId === Number(id)
           );
           if (allergy) {
@@ -111,15 +120,13 @@ const AllergiesAndDrugs = () => {
       const response = await axios.post(
         "https://service.healthcapita.com/api/PHR/SaveAllergy",
         updatedData
-        
       );
       console.log("Updated allergies sent successfully:", response);
-      setUpdatedAllergies(new Set()); 
+      setUpdatedAllergies(new Set());
     } catch (error) {
       console.error("Error updating allergies:", error);
     }
   };
-
 
   if (loading) {
     return (
@@ -135,56 +142,64 @@ const AllergiesAndDrugs = () => {
     );
   }
 
-  const allergyGroups = Object.entries(allergies);
+  const allergyGroups = Object.entries(formData); //formData
 
   return (
-    <div className="flex flex-col p-2 rounded-lg">
-      {allergyGroups.map(([groupName, allergyList], index) => (
-        <div key={groupName} className="mb-6">
-          <h2 className="font-semibold text-base text-gray-800 mb-2">
-            {groupName}
-          </h2>
-          <div className="flex flex-wrap gap-3">
-            {allergyList.map((allergy) => (
-              <div
-                key={allergy.allergyDetailId}
-                className="flex items-center gap-2"
-              >
-                <input
-                  type="checkbox"
-                  className="accent-blue-50 cursor-pointer"
-                  checked={selectedAllergies[allergy.allergyDetailId] || false}
-                  onChange={() => handleCheckboxChange(allergy)}
-                />
-                <span className="text-gray-700">{allergy.allergyName}</span>
-
-                {/* Show input field if "Other" is selected */}
-                {allergy.allergyName === "Other" &&
-                  selectedAllergies[allergy.allergyDetailId] && (
+    <>
+      <div>
+        <div className="flex flex-col p-2 rounded-lg">
+          {allergyGroups.map(([groupName, allergyList], index) => (
+            <div key={groupName} className="mb-6">
+              <h2 className="font-semibold text-base text-gray-800 mb-2">
+                {groupName}
+              </h2>
+              <div className="flex flex-wrap gap-3">
+                {allergyList.map((allergy) => (
+                  <div
+                    key={allergy.allergyDetailId}
+                    className="flex items-center gap-2"
+                  >
                     <input
-                      type="text"
-                      className="p-1 border border-gray-300 rounded ml-2"
-                      placeholder="Specify Other"
-                      value={customAllergyNames[allergy.allergyDetailId] || ""}
-                      onChange={(e) =>
-                        handleCustomAllergyChange(
-                          allergy.allergyDetailId,
-                          e.target.value
-                        )
+                      type="checkbox"
+                      className="accent-blue-50 cursor-pointer"
+                      checked={
+                        selectedAllergies[allergy.allergyDetailId] || false
                       }
+                      onChange={() => handleCheckboxChange(allergy)}
                     />
-                  )}
-              </div>
-            ))}
-          </div>
-          {index < allergyGroups.length - 1 && (
-            <hr className="mt-4 border-t border-gray-300" />
-          )}
-        </div>
-      ))}
+                    <span className="text-gray-700">{allergy.allergyName}</span>
 
-      <UpdateDetailsBtn onClick={sendUpdatedAllergies} />
-    </div>
+                    {/* Show input field if "Other" is selected */}
+                    {allergy.allergyName === "Other" &&
+                      selectedAllergies[allergy.allergyDetailId] && (
+                        <input
+                          type="text"
+                          className="p-1 border border-gray-300 rounded ml-2"
+                          placeholder="Specify Other"
+                          value={
+                            customAllergyNames[allergy.allergyDetailId] || ""
+                          }
+                          onChange={(e) =>
+                            handleCustomAllergyChange(
+                              allergy.allergyDetailId,
+                              e.target.value
+                            )
+                          }
+                        />
+                      )}
+                  </div>
+                ))}
+              </div>
+              {index < allergyGroups.length - 1 && (
+                <hr className="mt-4 border-t border-gray-300" />
+              )}
+            </div>
+          ))}
+
+          <UpdateDetailsBtn onClick={sendUpdatedAllergies} />
+        </div>
+      </div>
+    </>
   );
 };
 
