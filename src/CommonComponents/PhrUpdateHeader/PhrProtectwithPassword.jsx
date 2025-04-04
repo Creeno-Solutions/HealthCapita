@@ -33,7 +33,7 @@ const PhrProtectwithPassword = ({ Title, isProtected, isDisplayed, onProtectChan
             <input
               type="checkbox"
               className="mr-1 lg:mr-2 border-none checked:bg-[#001940]"
-              name="isdisplayUnderSummaryPage" 
+              name="isDisplayUnderSummaryPage" 
               checked={isDisplayed}
               onChange={onDisplayChange} 
             />

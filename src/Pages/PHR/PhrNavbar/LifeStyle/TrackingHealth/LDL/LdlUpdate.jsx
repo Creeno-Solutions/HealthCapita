@@ -46,7 +46,7 @@ const LdlUpdate = () => {
       );
       console.log("ldl", response);
       if (response?.data?.status) {
-        setLdlId(response?.data?.ldlID);
+        setLdlId(response?.data?.ldlid);
       }
     } catch (error) {
       console.log(error);
@@ -161,7 +161,7 @@ const LdlUpdate = () => {
               </div>
               {/* prescibed_Medication */}
             </form>
-
+            {ldlId && (
             <div className="flex flex-col items-end justify-center gap-3 w-[50%]">
               <div className="bg-[#EBF8FF] py-4 px-4 rounded-xl">
                 <h2 className="text-lg font-semibold text-[#004EBA] mb-2 py-2">
@@ -191,15 +191,16 @@ const LdlUpdate = () => {
                   </div>
                 </div>
               </div>
-              {ldlId && (
+              
                 <button
                   className="bg-[#EBF8FF] py-4 w-[330px] rounded-xl font-semibold text-[#004EBA]"
                   onClick={ToggleFields}
                 >
                   Medications & Reminders
                 </button>
-              )}
+            
             </div>
+             )}
           </div>
           {ldlId && (
             <MedicationAndreminders

@@ -32,7 +32,7 @@ const BloodTestInfoUpdate = () => {
     primaryCarePhysician: "",
     comments: "",
     isPasswordProtected: false,
-    isdisplayUnderSummaryPage: false,
+    isDisplayUnderSummaryPage: false,
     recStatus: "",
   });
 

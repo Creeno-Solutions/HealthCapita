@@ -28,7 +28,7 @@ const HdlUpdate = () => {
     primaryCarePhysician: "",
     comments: "",
     isPasswordProtected: false,
-    isDisplayUnderSummary: false,
+    isDisplayUnderSummaryPage:false,
     recStatus: "",
   });
 
@@ -48,7 +48,7 @@ const HdlUpdate = () => {
       );
       console.log("Hdlllllllll", response);
       if (response?.data?.status) {
-        setHdlId(response?.data?.hdlId);
+        setHdlId(response?.data?.hdlid);
       }
     } catch (error) {
       console.log(error);
@@ -79,7 +79,7 @@ const HdlUpdate = () => {
         <PhrProtectwithPassword
           Title="HDL"
           isProtected={formData.isPasswordProtected}
-          isDisplayed={formData.isDisplayUnderSummary}
+          isDisplayed={formData.isDisplayUnderSummaryPage}
           onProtectChange={handleChange}
           onDisplayChange={handleChange}
         />
@@ -163,7 +163,7 @@ const HdlUpdate = () => {
               </div>
               {/* prescibed_Medication */}
             </form>
-
+            {hdlid && (
             <div className="flex flex-col items-end justify-center gap-3 w-[50%]">
               <div className="bg-[#EBF8FF] py-4 px-4 rounded-xl">
                 <h2 className="text-lg font-semibold text-[#004EBA] mb-2 py-2">
@@ -181,6 +181,7 @@ const HdlUpdate = () => {
                     </span>
                     <input type="file" className="hidden" />
                   </label>
+                 
                   <div className="flex items-center justify-center space-x-2 pt-1">
                     <img
                       src={PhrAssets.InfoCircle}
@@ -191,17 +192,20 @@ const HdlUpdate = () => {
                       You can upload 1 file, not exceeding 10MB
                     </span>
                   </div>
+                
                 </div>
+              
               </div>
-              {hdlid && (
+           
                 <button
                   className="bg-[#EBF8FF] py-4 w-[330px] rounded-xl font-semibold text-[#004EBA]"
                   onClick={ToggleFields}
                 >
                   Medications & Reminders
                 </button>
-              )}
+            
             </div>
+              )}
           </div>
           {hdlid && (
             <MedicationAndreminders
