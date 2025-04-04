@@ -1,20 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
 import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
 
 const CurrentHealthStatus = ({
-  isPasswordProtected,
-  isDisplayUnderSummaryPage,
   setActiveTab,
+  isPasswordProtected,
+  isdisplayUnderSummaryPage,
+  handleProtectChange,
+  handleDisplayChange,
+  handleTabChange,
 }) => {
   const [data, setData] = useState({
     autoid: 0,
-    userId: 22,
+    userId: 10,
     currentSuffering: "",
     currentSufferingStatus: false,
     currentTakingAnyTreatment: "",
     currentTreatmentStatus: false,
+    isPasswordProtected: false,
+    isdisplayUnderSummaryPage: false,
   });
   // 22
   const GetCurrentHealthStatusApi = async () => {
@@ -22,7 +26,7 @@ const CurrentHealthStatus = ({
       const response = await axios.get(
         `https://service.healthcapita.com/api/PHR/GetCurentHealthStatusyId?UserId=${data.userId}`
       );
-
+      console.log("CurrentHealthStatus", response);
       if (response?.data?.isData) {
         const responseData = response.data.data;
         setData({
@@ -33,6 +37,9 @@ const CurrentHealthStatus = ({
           currentTakingAnyTreatment:
             responseData.currentTakingAnyTreatment || "",
           currentTreatmentStatus: responseData.currentTreatmentStatus || false,
+          isPasswordProtected: responseData.isPasswordProtected || false,
+          isdisplayUnderSummaryPage:
+            responseData.isdisplayUnderSummaryPage || false,
         });
       }
     } catch (error) {
@@ -50,14 +57,14 @@ const CurrentHealthStatus = ({
         "https://service.healthcapita.com/api/PHR/SaveCurentHealthStatus",
         {
           ...data,
-          isPasswordProtected,
-          isDisplayUnderSummaryPage,
+          isPasswordProtected: isPasswordProtected,
+          isdisplayUnderSummaryPage: isdisplayUnderSummaryPage,
         }
       );
       console.log("response", response);
       if (response?.data?.status) {
         console.log(" Data updated successfully");
-        setActiveTab(2);
+        handleTabChange(2);
       } else {
         console.error(" Failed to update data");
       }

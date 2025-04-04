@@ -3,7 +3,13 @@ import axios from "axios";
 import { Oval } from "react-loader-spinner";
 import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
 
-const InfantHistory = ({ setActiveTab }) => {
+const InfantHistory = ({
+  isPasswordProtected,
+  isdisplayUnderSummaryPage,
+  handleProtectChange,
+  handleDisplayChange,
+  handleTabChange,
+}) => {
   const [data, setData] = useState({
     jaundice: false,
     soreThroat: false,
@@ -11,6 +17,8 @@ const InfantHistory = ({ setActiveTab }) => {
     underWeight: false,
     intExtDefect: false,
     remarks: "",
+    isPasswordProtected: false,
+    isDisplayUnderSummaryPage: false,
   });
 
   const [isLoading, setIsLoading] = useState(true);
@@ -25,14 +33,23 @@ const InfantHistory = ({ setActiveTab }) => {
 
       if (response?.data?.data) {
         const apiData = response.data.data;
-        setData({
-          jaundice: apiData.jaundice || false,
-          soreThroat: apiData.soreThroat || false,
-          overWeight: apiData.overWeight || false,
-          underWeight: apiData.underWeight || false,
-          intExtDefect: apiData.intExtDefect || false,
-          remarks: apiData.remarks || "",
-        });
+        if (apiData) {
+          setData({
+            jaundice: apiData.jaundice || false,
+            soreThroat: apiData.soreThroat || false,
+            overWeight: apiData.overWeight || false,
+            underWeight: apiData.underWeight || false,
+            intExtDefect: apiData.intExtDefect || false,
+            remarks: apiData.remarks || "",
+          });
+
+          handleProtectChange({
+            target: { checked: apiData.isPasswordProtected || false },
+          });
+          handleDisplayChange({
+            target: { checked: apiData.isdisplayUnderSummaryPage || false },
+          });
+        }
 
         setIsDefectVisible(apiData.intExtDefect || false);
       }
@@ -64,6 +81,8 @@ const InfantHistory = ({ setActiveTab }) => {
       underWeight: data.underWeight,
       intExtDefect: data.intExtDefect,
       remarks: data.intExtDefect ? data.remarks : "",
+      isPasswordProtected: isPasswordProtected || false,
+      isDisplayUnderSummaryPage: isdisplayUnderSummaryPage || false,
     };
 
     try {
@@ -75,16 +94,8 @@ const InfantHistory = ({ setActiveTab }) => {
       if (response?.data?.status) {
         console.log("Data saved successfully!");
         console.log(response);
-        setActiveTab(5);
-        // Clear data immediately
-        setData({
-          jaundice: false,
-          soreThroat: false,
-          overWeight: false,
-          underWeight: false,
-          intExtDefect: false,
-          remarks: "",
-        });
+        handleTabChange(5);
+        // setActiveTab(5);
 
         setIsDefectVisible(false);
       } else {

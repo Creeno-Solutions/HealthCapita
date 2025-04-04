@@ -8,13 +8,12 @@ import InfantHistory from "./InfantHistory";
 import { useState } from "react";
 import SocialHistory from "./SocialHistory";
 import { useLocation } from "react-router-dom";
-import PhrUpdateHeader from "../../../../../../CommonComponents/PhrUpdateHeader/PhrUpdateHeader";
 import PhrProtectwithPassword from "../../../../../../CommonComponents/PhrUpdateHeader/PhrProtectwithPassword";
 const OverviewPhrUpdate = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(location.state?.activeTab || 0);
   const [isPasswordProtected, setIsPasswordProtected] = useState(false);
-  const [isDisplayUnderSummaryPage, setIsDisplayUnderSummaryPage] =
+  const [isdisplayUnderSummaryPage, setIsDisplayUnderSummaryPage] =
     useState(false);
   const navigate = useNavigate();
 
@@ -22,43 +21,84 @@ const OverviewPhrUpdate = () => {
     navigate("/phr");
   };
 
-  // Reset checkboxes when switching tabs
+  const onProtectChange = (e) => {
+    setIsPasswordProtected(e.target.checked);
+  };
+
+  const onDisplayChange = (e) => {
+    setIsDisplayUnderSummaryPage(e.target.checked);
+  };
+
   const handleTabChange = (index) => {
-    setActiveTab(index);
     setIsPasswordProtected(false);
     setIsDisplayUnderSummaryPage(false);
+    setActiveTab(index);
   };
-
-  const handleProtectChange = (value) => {
-    setIsPasswordProtected(value);
-  };
-
-  const handleDisplayChange = (value) => {
-    setIsDisplayUnderSummaryPage(value);
-  };
-
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
         return (
           <AllergiesAndDrugs
             setActiveTab={setActiveTab}
-            isPasswordProtected={isProtected}
-            isDisplayUnderSummaryPage={isDisplayed}
-            onDisplayChange={handleDisplayChange}
-            onProtectChange={handleProtectChange}
+            isPasswordProtected={isPasswordProtected}
+            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            handleProtectChange={onProtectChange}
+            handleDisplayChange={onDisplayChange}
+            handleTabChange={handleTabChange}
           />
         );
       case 1:
-        return <CurrentHealthStatus setActiveTab={setActiveTab} />;
+        return (
+          <CurrentHealthStatus
+            setActiveTab={setActiveTab}
+            isPasswordProtected={isPasswordProtected}
+            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            handleProtectChange={onProtectChange}
+            handleDisplayChange={onDisplayChange}
+            handleTabChange={handleTabChange}
+          />
+        );
       case 2:
-        return <DistinguishingMarks setActiveTab={setActiveTab} />;
+        return (
+          <DistinguishingMarks
+            isPasswordProtected={isPasswordProtected}
+            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            handleProtectChange={onProtectChange}
+            handleDisplayChange={onDisplayChange}
+            handleTabChange={handleTabChange}
+          />
+        );
       case 3:
-        return <Ethnicity setActiveTab={setActiveTab} />;
+        return (
+          <Ethnicity
+            setActiveTab={setActiveTab}
+            isPasswordProtected={isPasswordProtected}
+            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            handleProtectChange={onProtectChange}
+            handleDisplayChange={onDisplayChange}
+            handleTabChange={handleTabChange}
+          />
+        );
       case 4:
-        return <InfantHistory setActiveTab={setActiveTab} />;
+        return (
+          <InfantHistory
+            isPasswordProtected={isPasswordProtected}
+            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            handleProtectChange={onProtectChange}
+            handleDisplayChange={onDisplayChange}
+            handleTabChange={handleTabChange}
+          />
+        );
       case 5:
-        return <SocialHistory closePage={closePage} />;
+        return (
+          <SocialHistory
+            isPasswordProtected={isPasswordProtected}
+            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            handleProtectChange={onProtectChange}
+            handleDisplayChange={onDisplayChange}
+            handleTabChange={handleTabChange}
+          />
+        );
       default:
         return null;
     }
@@ -88,9 +128,9 @@ const OverviewPhrUpdate = () => {
           <PhrProtectwithPassword
             Title="Other Details"
             isProtected={isPasswordProtected}
-            isDisplayed={isDisplayUnderSummaryPage}
-            onProtectChange={handleProtectChange}
-            onDisplayChange={handleDisplayChange}
+            isDisplayed={isdisplayUnderSummaryPage}
+            onProtectChange={onProtectChange}
+            onDisplayChange={onDisplayChange}
           />
           {/* Tabs and Content */}
           <div className="flex flex-col lg:flex-row">
@@ -106,7 +146,7 @@ const OverviewPhrUpdate = () => {
               ].map((label, index) => (
                 <button
                   key={index}
-                  onClick={() => setActiveTab(index)}
+                  onClick={() => handleTabChange(index)}
                   className={`flex-shrink-0 whitespace-nowrap px-2 lg:px-3 py-3 text-sm lg:text-base text-left font-semibold transition duration-300 ease-in-out ${
                     activeTab === index
                       ? "bg-[#EBF8FF] text-black hover:bg-[#1C9401] hover:text-white rounded-lg"

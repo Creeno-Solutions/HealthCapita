@@ -4,11 +4,15 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const SocialHistory = ({ closePage }) => {
-  const userId = 150;
-  const isPasswordProtected = false;
-  const isdisplayUnderSummaryPage = false;
-  //150
+const SocialHistory = ({
+  isPasswordProtected,
+  isdisplayUnderSummaryPage,
+  handleProtectChange,
+  handleDisplayChange,
+  handleTabChange,
+}) => {
+  const userId = 10;
+  //150, 10
   const [formData, setFormData] = useState({
     socialHistoryId: "",
     userId: userId,
@@ -35,8 +39,8 @@ const SocialHistory = ({ closePage }) => {
     isSexuallyTransmittedInfection: false,
     hivandstisProtectionDescription: "",
     isPainDuringAfterSex: false,
-    isPasswordProtected: isPasswordProtected,
-    isdisplayUnderSummaryPage: isdisplayUnderSummaryPage,
+    isPasswordProtected: false,
+    isdisplayUnderSummaryPage: false,
   });
 
   const defaultExericeData = [
@@ -134,7 +138,7 @@ const SocialHistory = ({ closePage }) => {
       isSexuallyTransmittedInfection: value,
     });
   };
-       
+
   const sendSocialHistoryData = async () => {
     try {
       const response = await axios.post(
@@ -170,8 +174,9 @@ const SocialHistory = ({ closePage }) => {
           hivandstisProtectionDescription:
             formData.hivandstisProtectionDescription || "",
           isPainDuringAfterSex: formData.isPainDuringAfterSex || false,
-          isPasswordProtected: isPasswordProtected,
-          isdisplayUnderSummaryPage: isdisplayUnderSummaryPage,
+          isPasswordProtected: formData.isPasswordProtected || false,
+          isdisplayUnderSummaryPage:
+            formData.isdisplayUnderSummaryPage || false,
         }
       );
 
@@ -180,6 +185,7 @@ const SocialHistory = ({ closePage }) => {
         console.log("Data successfully sent to the backend!", response.data);
         toast.success("Data updated successfully!");
         setTimeout(() => closePage(), 1000);
+        handleTabChange();
       } else {
         console.error("Failed to save data:", response.statusText);
         toast.error("Failed to send data!");
@@ -437,7 +443,7 @@ const SocialHistory = ({ closePage }) => {
         </select>
       </div>
 
-      <hr className="my-6 border-gray-300" /> 
+      <hr className="my-6 border-gray-300" />
 
       {/* livingSituation */}
       <div className="flex flex-col gap-3 w-full">

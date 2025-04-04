@@ -3,19 +3,26 @@ import { useEffect, useState } from "react";
 import { Oval } from "react-loader-spinner";
 import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
 
-const DistinguishingMarks = ({ setActiveTab }) => {
+const DistinguishingMarks = ({
+  isPasswordProtected,
+  isdisplayUnderSummaryPage,
+  handleProtectChange,
+  handleDisplayChange,
+  handleTabChange,
+}) => {
   const [data, setData] = useState({
     tattoo: "no",
     scar: "no",
     burnMark: "no",
+    isPasswordProtected: false,
+    isdisplayUnderSummaryPage: false,
   });
   const [colorMasterData, setColorMasterData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [visibleBirthMarks, setVisibleBirthMarks] = useState(1);
   const userId = 40;
   //30, 40
-  const isPasswordProtected = false;
-  const isDisplayUnderSummaryPage = false;
+
   // console.log(data);
 
   const GetDistinguishingMarksApi = async () => {
@@ -29,14 +36,23 @@ const DistinguishingMarks = ({ setActiveTab }) => {
       const userDetails = apiData?.userDetails || {};
       console.log(response);
 
-      setData((prev) => ({
-        ...prev,
-        ...userDetails,
-        userId: userId,
-        tattoo: userDetails.tattoo || "no",
-        scar: userDetails.scar || "no",
-        burnMark: userDetails.burnMark || "no",
-      }));
+      if (userDetails) {
+        setData((prev) => ({
+          ...prev,
+          ...userDetails,
+          userId: userId,
+          tattoo: userDetails.tattoo || "no",
+          scar: userDetails.scar || "no",
+          burnMark: userDetails.burnMark || "no",
+        }));
+
+        handleProtectChange({
+          target: { checked: userDetails.isPasswordProtected || false },
+        });
+        handleDisplayChange({
+          target: { checked: userDetails.isdisplayUnderSummaryPage || false },
+        });
+      }
 
       setColorMasterData(apiData?.colorMasterData || []);
 
@@ -68,22 +84,21 @@ const DistinguishingMarks = ({ setActiveTab }) => {
   };
 
   const handleSave = async () => {
-    // Ensure all 5 birth mark values are included in the data object
     const updatedData = { ...data };
     for (let i = 1; i <= 5; i++) {
       if (!updatedData[`birthMark${i}`]) {
-        updatedData[`birthMark${i}`] = ""; // Set to an empty string if not present
+        updatedData[`birthMark${i}`] = "";
       }
     }
 
     const payload = {
       userId: userId,
-      isPasswordProtected,
-      isdisplayUnderSummaryPage: isDisplayUnderSummaryPage,
       ...updatedData,
+      isPasswordProtected: isPasswordProtected,
+      isdisplayUnderSummaryPage: isdisplayUnderSummaryPage,
     };
 
-    console.log("Payload to be sent:", payload);
+    console.log("distinguishingggggg:", payload);
 
     try {
       const response = await axios.post(
@@ -97,7 +112,8 @@ const DistinguishingMarks = ({ setActiveTab }) => {
         response?.data?.status === 1
       ) {
         console.log("Data saved successfully!");
-        setActiveTab(3);
+
+        handleTabChange(3);
       } else {
         console.error("Failed to save data. Response:", response?.data);
       }
