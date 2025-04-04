@@ -41,7 +41,7 @@ const PhrWeight = () => {
   const [selectedContact, setSelectedContact] = useState({});
 
   const openWeightForm = async (WeightId) => {
-    setWeightForm(true);
+    setWeightForm(true);  
     try {
       const response = await axios.get(
         `https://service.healthcapita.com/api/PHR/GetWeightById/${WeightId}/${userId}`
