@@ -3,7 +3,7 @@ import { PhrAssets } from "../../../../../../assets/PHR/assets";
 // import Update from "../../../../../../CommonComponents/Update/Update";
 import AddBtn from "../../../../../../CommonComponents/AddBtn/AddBtn";
 import { useNavigate } from "react-router-dom";
-import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsbtn";
+import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
 import axios from "axios";
 
 const PhrSgpt = () => {
@@ -22,10 +22,9 @@ const PhrSgpt = () => {
   const handleDelete = async (SGPTId) => {
     try {
       const response = await axios.post(
-        `https://service.healthcapita.com/api/PHR/DeletePhrSgptById?SGPTId=${SGPTId}&userId=${userId}`
+        `https://service.healthcapita.com/api/PHR/delete/Sgpt/${SGPTId}/${userId}`
       );
-      // console.log("deleteSgpt", response?.data?.status);
-      if (response?.data?.status) {
+      if (response?.data?.success) {
         const deletedData = await axios.get(
           `https://service.healthcapita.com/api/PHR/GetPhrSgpt?userId=${userId}`
         );

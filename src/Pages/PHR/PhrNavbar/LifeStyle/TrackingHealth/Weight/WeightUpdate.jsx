@@ -160,7 +160,7 @@ const WeightUpdate = () => {
               </div>
               {/* prescibed_Medication */}
             </form>
-
+            {weightId && (
             <div className="flex flex-col items-end justify-center gap-3 w-[50%]">
               <div className="bg-[#EBF8FF] py-4 px-4 rounded-xl">
                 <h2 className="text-lg font-semibold text-[#004EBA] mb-2 py-2">
@@ -190,15 +190,16 @@ const WeightUpdate = () => {
                   </div>
                 </div>
               </div>
-              {weightId && (
+             
                 <button
                   className="bg-[#EBF8FF] py-4 w-[330px] rounded-xl font-semibold text-[#004EBA]"
                   onClick={ToggleFields}
                 >
                   Medications & Reminders
                 </button>
-              )}
+             
             </div>
+          )}
           </div>
           {weightId && (
             <MedicationAndreminders

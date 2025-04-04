@@ -9,7 +9,7 @@ const MoodAndStressUpdate = () => {
   const location = useLocation();
   const moodId = location.state?.MoodStressId || null;
 
-  const id = 666;
+  const id = 10;
   const [formData, setFormData] = useState({
     moodStressId: 0,
     userId: id,
@@ -22,10 +22,10 @@ const MoodAndStressUpdate = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value ,type,checked } = e.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 

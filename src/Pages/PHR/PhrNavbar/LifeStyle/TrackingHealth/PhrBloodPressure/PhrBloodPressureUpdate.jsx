@@ -163,7 +163,7 @@ const PhrBloodPressureUpdate = () => {
                 </div>
               </div>
             </form>
-
+            {bloodPressureId && (
             <div className="flex flex-col items-end justify-center gap-3 w-[50%]">
               <div className="bg-[#EBF8FF] py-4 px-4 rounded-xl">
                 <h2 className="text-lg font-semibold text-[#004EBA] mb-2 py-2">
@@ -193,15 +193,16 @@ const PhrBloodPressureUpdate = () => {
                   </div>
                 </div>
               </div>
-              {bloodPressureId && (
+              
                 <button
                   className="bg-[#EBF8FF] py-4 px-14 rounded-xl font-semibold text-[#004EBA]"
                   onClick={ToggleFields}
                 >
                   Medications & Reminders
                 </button>
-              )}
+           
             </div>
+          )}
           </div>
 
           {bloodPressureId && (

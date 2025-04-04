@@ -7,7 +7,7 @@ import axios from "axios";
 
 const PhrMoodAndStress = () => {
   const navigate = useNavigate();
-
+const id=10
   const openMoodAndStressAddPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     navigate("/phrMoodAndStressUpdatePage");
@@ -21,12 +21,12 @@ const PhrMoodAndStress = () => {
   const handleDelete = async (MoodStressId) => {
     try {
       const response = await axios.post(
-        `https://service.healthcapita.com/api/PHR/DeletePhrMoodStressById?MoodStressId=${MoodStressId}&userId=666`
+        `https://service.healthcapita.com/api/PHR/DeletePhrMoodStressById?MoodStressId=${MoodStressId}&userId=${id}`
       );
       // console.log("deleteMood", response?.data?.status);
       if (response?.data?.status) {
         const deletedData = await axios.get(
-          "https://service.healthcapita.com/api/PHR/GetPhrMoodStress?userId=666"
+          `https://service.healthcapita.com/api/PHR/GetPhrMoodStress?userId=${id}`
         );
         setData(deletedData?.data?.data || []);
       }
@@ -43,7 +43,7 @@ const PhrMoodAndStress = () => {
     setMoodAndStressForm(true);
     try {
       const response = await axios.get(
-        `https://service.healthcapita.com/api/PHR/GetPhrMoodStressById/${MoodStressId}/666`
+        `https://service.healthcapita.com/api/PHR/GetPhrMoodStressById/${MoodStressId}/${id}`
       );
       console.log("moodForm", response?.data?.data);
       if (response?.data?.isData) {
@@ -62,7 +62,7 @@ const PhrMoodAndStress = () => {
     const getApiData = async () => {
       try {
         const response = await axios.get(
-          "https://service.healthcapita.com/api/PHR/GetPhrMoodStress?userId=666"
+          `https://service.healthcapita.com/api/PHR/GetPhrMoodStress?userId=${id}`
         );
         console.log("moodDataaa", response?.data?.data);
         if (response?.data?.status) {

@@ -43,7 +43,7 @@ const MedicationAndreminders = ({ showFields,recordIdKey,recordId,fetchDataUrl,s
       const response = await axios.get(`${editUrl}=${prescribedMedicationsId}&userId=${id}`);
 
 
-      console.log(response?.data?.data);
+      console.log('triglerids',response);
 
       if (response?.data?.status) {
         const fetchedData = response?.data?.data;
