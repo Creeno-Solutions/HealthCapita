@@ -21,10 +21,12 @@ const PhrBloodSugar = () => {
   const handleDelete = async (BloodSugarId) => {
     try {
       const response = await axios.post(
-        `https://service.healthcapita.com/api/PHR/DeletePhrBloodSugarByIdbloodsugarIduserId?bloodsugarId=${BloodSugarId}&userId=${id}`
+        `https://service.healthcapita.com/api/PHR/DeletePhrBloodSugarById/${BloodSugarId}/${id}`
+        
+        
       );
-      // console.log("deletesugar", response?.data?.status);
-      if (response?.data?.status) {
+     
+      if (response?.data?.success) {
         const deletedData = await axios.get(
           `https://service.healthcapita.com/api/PHR/GetPhrBloodSugar?userId=${id}`
         );

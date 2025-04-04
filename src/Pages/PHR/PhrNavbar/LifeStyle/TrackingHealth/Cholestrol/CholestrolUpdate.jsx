@@ -18,7 +18,7 @@ const CholestrolUpdate = () => {
   const [cholesterolId, setCholesterolId] = useState(
     location.state?.CholesterolId || null
   );
-  console.log("cholestrol", cholesterolId);
+
 
   const userId = 10;
   const [formData, setFormData] = useState({

@@ -32,7 +32,9 @@ const InsuranceDetailsUpdate = () => {
     maturity: "",
     recStatus: "",
   });
-
+  const closePage = () => {
+    navigate("/phr");
+  };
   useEffect(() => {
     if (insuranceId) {
       axios
@@ -63,6 +65,9 @@ const InsuranceDetailsUpdate = () => {
         "https://service.healthcapita.com/api/PHR/SaveInsurenceDetails",
         formData
       );
+      if(response?.data?.status){
+        closePage()
+      }
     } catch (error) {
       console.log(error);
     }

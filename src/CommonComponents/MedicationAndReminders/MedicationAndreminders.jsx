@@ -71,7 +71,7 @@ const MedicationAndreminders = ({ showFields,recordIdKey,recordId,fetchDataUrl,s
    console.log('bloodsugar',deleteResponse?.data?.success)
       if (deleteResponse?.data?.success) {
         const fetchResponse = await axios.get(`${fetchDataUrl}?userId=${id}&${recordIdKey}=${recordId}`);
-        console.log('delete response...',fetchResponse)
+        console.log('fetch response...',fetchResponse)
         setData(fetchResponse?.data?.data || []);
         setFormData({
             prescribedMedicationsId: 0,

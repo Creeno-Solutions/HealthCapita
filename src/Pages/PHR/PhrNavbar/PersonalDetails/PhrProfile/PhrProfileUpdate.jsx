@@ -51,7 +51,7 @@ const PhrProfileUpdate = () => {
         const response = await axios.get(
           `https://service.healthcapita.com/api/PHR/GetMemberById?UserId=${userId}`
         );
-        if (response?.data?.isData === true) {
+        if (response?.data?.isData) {
           setFormData(response?.data?.data);
         }
         setLoading(false);
@@ -79,7 +79,9 @@ const PhrProfileUpdate = () => {
         "https://service.healthcapita.com/api/PHR/SaveMemberDetails",
         formData
       );
-      console.log(response);
+     if(response?.data?.status){
+      closePage()
+     }
     } catch (error) {
       console.log(error);
     }

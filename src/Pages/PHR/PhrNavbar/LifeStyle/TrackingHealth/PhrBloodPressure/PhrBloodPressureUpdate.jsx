@@ -32,6 +32,7 @@ const PhrBloodPressureUpdate = () => {
   });
 
   // const user = UserInfo
+  console.log('bloodpressureid',bloodPressureId)
   const ToggleFields = () => {
     setShowFields((prevState) => !prevState);
   };
@@ -40,6 +41,7 @@ const PhrBloodPressureUpdate = () => {
       axios
         .get(
           `https://service.healthcapita.com/api/PHR/GetPhrBloodPressureById/${bloodPressureId}/${userId}`
+          
         )
         .then((response) => {
           setFormData(response?.data?.data);
@@ -206,11 +208,12 @@ const PhrBloodPressureUpdate = () => {
             <MedicationAndreminders
               showFields={showFields}
               recordId={bloodPressureId}
-              recordIdKey={"BloodPressureId"}
+              recordIdKey={"bloodPressureId"}
               fetchDataUrl={`${BASE_URL}/api/PHR/GetPrescribedMedicationsByBloodPressureId`}
               saveUrl={`${BASE_URL}/api/PHR/SaveBloodPressurePrescribedMedications`}
               editUrl={`${BASE_URL}/api/PHR/GetPhrBloodPressurePrescribedMedication?prescribedMedicationsId`}
               deleteUrl={`${BASE_URL}/api/PHR/DeletePhrBloodPressurePrescribedMedication?prescribedMedicationsId`}
+              
             />
           )}
         </div>

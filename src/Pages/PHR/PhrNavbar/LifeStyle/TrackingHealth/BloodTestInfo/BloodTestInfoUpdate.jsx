@@ -33,8 +33,6 @@ const BloodTestInfoUpdate = () => {
     comments: "",
     isPasswordProtected: false,
     isdisplayUnderSummaryPage: false,
-    isDisplayUnderOtherHealthRecord: true,
-    isdisplayUnderImpHealthRecord: true,
     recStatus: "",
   });
 

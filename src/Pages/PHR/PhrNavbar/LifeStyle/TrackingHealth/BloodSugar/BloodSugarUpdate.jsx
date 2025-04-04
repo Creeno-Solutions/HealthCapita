@@ -14,6 +14,7 @@ const BloodSugarUpdate = () => {
   const [bloodSugarId, setBloodSugarId] = useState(
     location.state?.BloodSugarId || null
   );
+  console.log('bloodsugarid',bloodSugarId)
 
   const ToggleFields = () => {
     setShowFields((prevState) => !prevState);
@@ -64,9 +65,9 @@ const BloodSugarUpdate = () => {
         "https://service.healthcapita.com/api/PHR/SavePhrBloodSugar",
         formData
       );
-      console.log("postDataaaaaa", response);
+     
       if (response?.data?.status) {
-        setBloodSugarId(response?.data?.bloodSugarid);
+        setBloodSugarId(response?.data?.bloodSugarId);
       }
     } catch (error) {
       console.log(error);
@@ -244,11 +245,12 @@ const BloodSugarUpdate = () => {
             <MedicationAndreminders
               showFields={showFields}
               recordId={bloodSugarId}
-              recordIdKey={"BloodSugarId"}
+              recordIdKey={"bloodSugarId"}
               fetchDataUrl="https://service.healthcapita.com/api/PHR/GetPrescribedMedicationsByBloodSugarId"
             saveUrl="https://service.healthcapita.com/api/PHR/SaveBloodSugarPrescribedMedications"
               editUrl="https://service.healthcapita.com/api/PHR/GetPhrBloodSugarPrescribedMedication?prescribedMedicationsId"
               deleteUrl="https://service.healthcapita.com/api/PHR/DeletePhrBloodSugarPrescribedMedication?prescribedMedicationsId"
+              
             />
           )}
         </div>
