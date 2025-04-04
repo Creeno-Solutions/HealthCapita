@@ -205,7 +205,7 @@ const PhrCholestrol = () => {
 
               <div>
                 <UpdateDetailsBtn
-                  onClick={() => openCholestrolUpdatePage(CholesterolId)}
+                  onClick={() => openCholestrolUpdatePage(selectedContact.cholesterolId)}
                 />
               </div>
             </div>

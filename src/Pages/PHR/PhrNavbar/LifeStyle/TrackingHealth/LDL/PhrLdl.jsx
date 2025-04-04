@@ -190,7 +190,7 @@ const PhrLdl = () => {
               </div>
 
               <div>
-                <UpdateDetailsBtn onClick={() => openLdlUpdatePage(LDLId)} />
+                <UpdateDetailsBtn onClick={() => openLdlUpdatePage(selectedContact.ldlid)} />
               </div>
             </div>
           </div>

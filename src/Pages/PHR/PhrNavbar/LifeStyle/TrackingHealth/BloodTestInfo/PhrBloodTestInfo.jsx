@@ -14,6 +14,7 @@ const PhrBloodTestInfo = () => {
   };
   const userId = 10;
   const openBloodTestUpdatePage = (BloodTestInformationId) => {
+    console.log('BloodTestInformationId',BloodTestInformationId)
     window.scrollTo({ top: 0, behavior: "smooth" });
     navigate("/BloodTestInfoUpdate", { state: { BloodTestInformationId } });
   };
@@ -47,6 +48,7 @@ const PhrBloodTestInfo = () => {
       const response = await axios.get(
         `https://service.healthcapita.com/api/PHR/GetPhrBloodTestInformationById/${BloodTestInformationId}/${userId}`
       );
+      console.log('bloodtestdataforid',response)
       setSelectedConatct(response?.data?.data);
     } catch (error) {
       console.log(error);
@@ -229,7 +231,9 @@ const PhrBloodTestInfo = () => {
               </div>
 
               <div>
-                <UpdateDetailsBtn onClick={openBloodTestUpdatePage} />
+                <UpdateDetailsBtn  onClick={() =>
+                          openBloodTestUpdatePage(selectedContact.bloodTestInformationId)
+                        } />
               </div>
             </div>
           </div>

@@ -195,7 +195,7 @@ const PhrSgot = () => {
               </div>
 
               <div>
-                <UpdateDetailsBtn onClick={() => openSgotUpdatePage(SGOTId)} />
+                <UpdateDetailsBtn onClick={() => openSgotUpdatePage(selectedContact.sgotid)} />
               </div>
             </div>
           </div>

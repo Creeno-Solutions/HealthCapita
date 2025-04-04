@@ -195,7 +195,7 @@ const PhrHdl = () => {
               </div>
 
               <div>
-                <UpdateDetailsBtn onClick={() => openHdlUpdatePage(HDLId)} />
+                <UpdateDetailsBtn onClick={() => openHdlUpdatePage(selectedContact.hdlid)} />
               </div>
             </div>
           </div>

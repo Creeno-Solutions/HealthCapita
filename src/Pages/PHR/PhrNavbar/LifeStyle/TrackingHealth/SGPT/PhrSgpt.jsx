@@ -195,7 +195,7 @@ const PhrSgpt = () => {
               </div>
 
               <div>
-                <UpdateDetailsBtn onClick={() => openSgptUpdatePage(SGPTId)} />
+                <UpdateDetailsBtn onClick={() => openSgptUpdatePage(selectedContact.sgptid)} />
               </div>
             </div>
           </div>

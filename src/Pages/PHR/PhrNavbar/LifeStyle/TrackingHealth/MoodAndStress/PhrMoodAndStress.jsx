@@ -189,7 +189,7 @@ const id=10
 
               <div>
                 <UpdateDetailsBtn
-                  onClick={() => openMoodAndStressUpdatePage(MoodStressId)}
+                  onClick={() => openMoodAndStressUpdatePage(selectedContact.moodStressId)}
                 />
               </div>
             </div>

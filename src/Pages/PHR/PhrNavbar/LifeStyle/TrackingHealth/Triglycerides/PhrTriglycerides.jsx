@@ -210,7 +210,7 @@ const PhrTriglycerides = () => {
               <div>
                 <UpdateDetailsBtn
                   onClick={() =>
-                    openTriglyceridesUpdatePage(BloodTriglyceridesId)
+                    openTriglyceridesUpdatePage(selectedContact.bloodTriglyceridesId)
                   }
                 />
               </div>

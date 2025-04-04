@@ -44,7 +44,7 @@ const PhrWeight = () => {
     setWeightForm(true);
     try {
       const response = await axios.get(
-        `https://service.healthcapita.com/api/PHR/DeletePhrWeightById?WeightId=${WeightId}&userId=${userId}`
+        `https://service.healthcapita.com/api/PHR/GetWeightById/${WeightId}/${userId}`
       );
       // console.log(response?.data?.response);
       if (response?.data?.status) {
@@ -199,7 +199,7 @@ const PhrWeight = () => {
 
               <div>
                 <UpdateDetailsBtn
-                  onClick={() => openWeightUpdatePage(WeightId)}
+                  onClick={() => openWeightUpdatePage(selectedContact.weightId)}
                 />
               </div>
             </div>
