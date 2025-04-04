@@ -23,7 +23,6 @@ const PhrBloodSugar = () => {
       const response = await axios.post(
         `https://service.healthcapita.com/api/PHR/DeletePhrBloodSugarById/${BloodSugarId}/${id}`
         
-        
       );
      
       if (response?.data?.success) {

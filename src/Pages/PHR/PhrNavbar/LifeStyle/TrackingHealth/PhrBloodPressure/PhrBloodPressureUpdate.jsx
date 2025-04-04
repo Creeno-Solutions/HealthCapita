@@ -159,8 +159,8 @@ const PhrBloodPressureUpdate = () => {
                     onChange={handleChange}
                     placeholder="Enter primary Care Physician"
                     className="border border-gray-300 p-1 rounded-md focus:outline-none"
-                  />
-                </div>
+                  />    
+                </div> 
               </div>
             </form>
             {bloodPressureId && (
