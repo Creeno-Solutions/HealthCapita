@@ -1,33 +1,33 @@
-import Dental from "./Dental";
-import Hearing from "./Hearing";
-import Immunization from "./Immunization";
-import Optical from "./Optical";
-import Prosthesis from "./Prosthesis";
-import Vaccination from "./Vaccination";
-import FamilyMedicalHistory from "./familyMedicalHistory";
-import { PhrAssets } from "../../../../assets/PHR/assets";
 import { useState } from "react";
+import Dentalupdate from "./DentalUpdate";
+import Hearingupdate from "./HearingUpdate";
+import ImmunizationUpdate from "./ImmunizationUpdate";
+import OpticalUpdate from "./OpticalUpdate";
+import ProsthesisUpdate from "./ProsthesisUpdate";
+import FamilyMedicalHistoryUpdate from "./FamilyMedicalHistoryUpdate";
+import ImpairmentsUpdate from "./ImpairmentsUpdate";
+import { useLocation } from "react-router-dom";
 
-const OtherHistory = () => {
-
-  const [activeTab, setActiveTab] = useState(0)
+const OtherHistoryFields = () => {
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 0);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
-        return <Dental/>;
+        return <Dentalupdate />;
       case 1:
-        return <Hearing/>;
+        return <Hearingupdate />;
       case 2:
-        return <Immunization/>;
+        return <ImmunizationUpdate />;
       case 3:
-        return <Optical/>;
+        return <ImpairmentsUpdate />;
       case 4:
-        return <Prosthesis/>;
+        return <OpticalUpdate />;
       case 5:
-        return <Vaccination />;
-        case 6:
-          return <FamilyMedicalHistory/>;
+        return <ProsthesisUpdate />;
+      case 6:
+        return <FamilyMedicalHistoryUpdate />;
       default:
         return null;
     }
@@ -45,9 +45,9 @@ const OtherHistory = () => {
                 "Dental",
                 "Hearing",
                 "Immunization",
+                "Impairments",
                 "Optical",
                 "Prosthesis",
-                "Vaccination",
                 "FamilyMedicalHistory",
               ].map((label, index) => (
                 <button
@@ -65,7 +65,7 @@ const OtherHistory = () => {
             </div>
 
             {/* Content */}
-            <div className="overflow-y-auto max-h-[450px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 md:w-[85%]  bg-[#F9FAFB] px-4 py-3 mt-6 mb-16 h-auto rounded-lg ">
+            <div className="overflow-y-auto max-h-[450px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 md:w-[85%]  bg-[#F9FAFB] px-4 py-3 mt-6 mb-16 rounded-lg ">
               {renderTabContent()}
             </div>
           </div>
@@ -73,6 +73,6 @@ const OtherHistory = () => {
       </div>
     </>
   );
-}
+};
 
-export default OtherHistory;
+export default OtherHistoryFields;

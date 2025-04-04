@@ -162,10 +162,12 @@ const MedicationAndreminders = ({ showFields,recordIdKey,recordId,fetchDataUrl,s
 
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get(`${fetchDataUrl}?userId=${id}&${recordIdKey}=${recordId}`);
-      console.log("getmedical", response?.data?.data);
+      const response = await axios.get(
+        `${fetchDataUrl}?userId=${id}&${recordIdKey}=${recordId}`
+      );
+      console.log("getmedicalllllll", response);
       setData(response?.data?.data || []);
-    };
+    }; 
     getData();
   }, []);
 

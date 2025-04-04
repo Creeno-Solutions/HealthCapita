@@ -29,6 +29,13 @@ import TriglyceridesUpdate from "./Pages/PHR/PhrNavbar/LifeStyle/TrackingHealth/
 import WeightUpdate from "./Pages/PHR/PhrNavbar/LifeStyle/TrackingHealth/Weight/WeightUpdate";
 import MedicalAndSurgeryUpdate from "./Pages/PHR/PhrNavbar/MedicalSurgery/MedicalAndSurgeryUpdate";
 import MedicalAndSurgery from "./Pages/PHR/PhrNavbar/MedicalSurgery/MedicalAndSurgery";
+import Dentalupdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/DentalUpdate";
+import Hearingupdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/HearingUpdate";
+import ImmunizationUpdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/ImmunizationUpdate";
+import OpticalUpdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/OpticalUpdate";
+import FamilyMedicalHistoryUpdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/FamilyMedicalHistoryUpdate";
+import ProsthesisUpdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/ProsthesisUpdate";
+import OtherHistoryFields from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/OtherHistoryFields";
 
 function App() {
   const location = useLocation();
@@ -90,6 +97,16 @@ function App() {
           element={<MedicalAndSurgeryUpdate />}
         />
         <Route path="/phr/MedicalAndSurgery" element={<MedicalAndSurgery />} />
+        <Route path="/dentalUpdatePage" element={<Dentalupdate />} />
+        <Route path="/hearingUpdate" element={<Hearingupdate />} />
+        <Route path="/immunizationUpdte" element={<ImmunizationUpdate />} />
+        <Route path="/opticalUpdate" element={<OpticalUpdate />} />
+        <Route path="/ProsthesisUpdate" element={<ProsthesisUpdate />} />
+        <Route
+          path="/familyMedicalHistoryUpdate"
+          element={<FamilyMedicalHistoryUpdate />}
+        />
+        <Route path="/otherHistoryFields" element={<OtherHistoryFields />} />
       </Routes>
 
       {!HideHeaderandFooter && <Footer />}

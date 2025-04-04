@@ -1,13 +1,12 @@
 import React from "react";
 import { PhrAssets } from "../../../../../assets/PHR/assets";
-import Update from "../../../../../CommonComponents/Update/Update";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import UserInfo from "../../../../../utils/UserInfo";
 import PlusAddBtn from "../../../../../CommonComponents/PlusAddBtn/PlusAddBtn";
 
-const PhrProfile = ({ showUpdateButton = true }) => {
+const PhrProfile = ({ showAddButton = true }) => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
   const userId = UserInfo();
@@ -53,11 +52,9 @@ const PhrProfile = ({ showUpdateButton = true }) => {
               </div>
             </div>
           </div>
-          <div className="flex gap-2 items-center justify-center">
+          <div className="flex items-center justify-center">
             <img src={PhrAssets.PlusAdd} alt="" />
-            {showUpdateButton && (
-              <PlusAddBtn onClick={openPhrProfileUpdatePage} />
-            )}
+            {showAddButton && <PlusAddBtn onClick={openPhrProfileUpdatePage} />}
           </div>
         </div>
 
