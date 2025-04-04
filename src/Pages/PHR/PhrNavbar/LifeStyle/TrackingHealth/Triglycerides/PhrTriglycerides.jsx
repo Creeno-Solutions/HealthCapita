@@ -39,6 +39,7 @@ const PhrTriglycerides = () => {
   const [showTriglyceridesForm, setTriglyceridesForm] = useState(false);
   const [data, setData] = useState([]);
   const [selectedContact, setSelectedConatct] = useState({});
+  const add = 2;
 
   const openTriglyceridesForm = async (BloodTriglyceridesId) => {
     setTriglyceridesForm(true);
