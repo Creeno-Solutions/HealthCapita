@@ -138,12 +138,7 @@ const MedicalContacts = ({ showUpdateButton = true, showAddButton = true }) => {
               Medical Contacts
             </p>
           </div>
-          <div className="flex items-center justify-center">
-            <img src={PhrAssets.PlusAdd} alt="" />
-            {showAddButton && (
-              <PlusAddBtn onClick={openPhrMedicalContactsPage} />
-            )}
-          </div>
+          {showAddButton && <PlusAddBtn onClick={openPhrMedicalContactsPage} />}
         </div>
         <p className="border border-gray-300 px-2 my-3"></p>
 

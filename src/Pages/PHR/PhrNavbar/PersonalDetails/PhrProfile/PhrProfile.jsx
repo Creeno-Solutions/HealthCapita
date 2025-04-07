@@ -52,10 +52,7 @@ const PhrProfile = ({ showAddButton = true }) => {
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-center">
-            <img src={PhrAssets.PlusAdd} alt="" />
-            {showAddButton && <PlusAddBtn onClick={openPhrProfileUpdatePage} />}
-          </div>
+          {showAddButton && <PlusAddBtn onClick={openPhrProfileUpdatePage} />}
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 py-4 px-3">

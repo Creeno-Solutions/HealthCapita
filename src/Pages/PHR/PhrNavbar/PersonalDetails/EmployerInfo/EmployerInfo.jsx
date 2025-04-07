@@ -116,12 +116,7 @@ const EmployerInfo = ({ showUpdateButton = true, showAddButton = true }) => {
               Employer Information
             </p>
           </div>
-          <div className="flex items-center justify-center">
-            <img src={PhrAssets.PlusAdd} alt="" />
-            {showAddButton && (
-              <PlusAddBtn onClick={openEmployerInfoUpdatePage} />
-            )}
-          </div>
+          {showAddButton && <PlusAddBtn onClick={openEmployerInfoUpdatePage} />}
         </div>
         <p className="border border-gray-300 px-2 my-3"></p>
 

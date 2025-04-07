@@ -140,12 +140,9 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
               Family Details
             </p>
           </div>
-          <div className="flex items-center justify-center">
-            <img src={PhrAssets.PlusAdd} alt="" />
-            {showAddButton && (
-              <PlusAddBtn onClick={openFamilyDetailsUpdatePage} />
-            )}
-          </div>
+          {showAddButton && (
+            <PlusAddBtn onClick={openFamilyDetailsUpdatePage} />
+          )}
         </div>
         <p className="border border-gray-300 px-2 my-3"></p>
 

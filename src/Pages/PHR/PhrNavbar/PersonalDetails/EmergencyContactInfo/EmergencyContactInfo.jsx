@@ -130,12 +130,9 @@ const EmergencyContactInfo = ({
               Emergency Contct Information
             </p>
           </div>
-          <div className="flex ietms-center justify-center">
-            <img src={PhrAssets.PlusAdd} alt="" />
-            {showAddButton && (
-              <PlusAddBtn onClick={openEmergencyContactUpdatePage} />
-            )}
-          </div>
+          {showAddButton && (
+            <PlusAddBtn onClick={openEmergencyContactUpdatePage} />
+          )}
         </div>
         <p className="border border-gray-300 px-2 my-3"></p>
 

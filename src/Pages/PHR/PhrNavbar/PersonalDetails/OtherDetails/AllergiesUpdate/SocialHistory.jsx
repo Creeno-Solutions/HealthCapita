@@ -6,10 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 const SocialHistory = ({
   isPasswordProtected,
-  isdisplayUnderSummaryPage,
+  isDisplayUnderSummaryPage,
   handleProtectChange,
   handleDisplayChange,
   handleTabChange,
+  closePage,
 }) => {
   const userId = 10;
   //150, 10
@@ -40,7 +41,7 @@ const SocialHistory = ({
     hivandstisProtectionDescription: "",
     isPainDuringAfterSex: false,
     isPasswordProtected: false,
-    isdisplayUnderSummaryPage: false,
+    isDisplayUnderSummaryPage: false,
   });
 
   const defaultExericeData = [
@@ -74,7 +75,20 @@ const SocialHistory = ({
         );
 
         if (response.data.isData) {
-          setFormData(response.data.data);
+          const fetchedData = response.data.data;
+          if (fetchData) {
+            setFormData(() => ({
+              ...fetchedData,
+            }));
+            handleProtectChange({
+              target: { checked: fetchedData.isPasswordProtected || false },
+            });
+            handleDisplayChange({
+              target: {
+                checked: fetchedData.isDisplayUnderSummaryPage || false,
+              },
+            });
+          }
         }
       } catch (error) {
         console.error("Error fetching social history data:", error);
@@ -86,9 +100,19 @@ const SocialHistory = ({
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    let val;
+
+    if (type === "checkbox") {
+      val = checked;
+    } else if (value === "true" || value === "false") {
+      val = value === "true"; // convert to boolean
+    } else {
+      val = value;
+    }
+
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: val,
     }));
   };
 
@@ -97,12 +121,7 @@ const SocialHistory = ({
 
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: [
-        "sleepOfHours",
-        "weekDaysOfExcercise",
-        "problemInSleep",
-        "isPainDuringAfterSex",
-      ].includes(name)
+      [name]: ["weekDaysOfExcercise"].includes(name)
         ? parseInt(value, 10)
         : value,
     }));
@@ -150,8 +169,8 @@ const SocialHistory = ({
           totalSessionOfExcercise: formData.totalSessionOfExcercise || "",
           excerciseType: formData.excerciseType || 0,
           otherExcerciseType: formData.otherExcerciseType || "",
-          sleepOfHours: formData.sleepOfHours || 0,
-          problemInSleep: formData.problemInSleep || 0,
+          sleepOfHours: String(formData.sleepOfHours || ""),
+          problemInSleep: String(formData.problemInSleep || ""),
           smokeType: formData.smokeType || "",
           otherSmoker: formData.otherSmoker || false,
           alcoholicBeveragesContent: formData.alcoholicBeveragesContent || "",
@@ -174,9 +193,8 @@ const SocialHistory = ({
           hivandstisProtectionDescription:
             formData.hivandstisProtectionDescription || "",
           isPainDuringAfterSex: formData.isPainDuringAfterSex || false,
-          isPasswordProtected: formData.isPasswordProtected || false,
-          isdisplayUnderSummaryPage:
-            formData.isdisplayUnderSummaryPage || false,
+          isPasswordProtected: isPasswordProtected,
+          isDisplayUnderSummaryPage: isDisplayUnderSummaryPage,
         }
       );
 
@@ -184,8 +202,7 @@ const SocialHistory = ({
       if (response?.data?.status) {
         console.log("Data successfully sent to the backend!", response.data);
         toast.success("Data updated successfully!");
-        setTimeout(() => closePage(), 1000);
-        handleTabChange();
+        closePage();
       } else {
         console.error("Failed to save data:", response.statusText);
         toast.error("Failed to send data!");
@@ -200,12 +217,9 @@ const SocialHistory = ({
     <>
       {/* weekDaysOfExcercise */}
       <div className="flex flex-col gap-3 w-full">
-        <label htmlFor="weekDaysOfExcercise">
-          How many days per week do you excercise?
-        </label>
+        <label>How many days per week do you excercise?</label>
         <select
           name="weekDaysOfExcercise"
-          id="weekDaysOfExcercise"
           value={formData.weekDaysOfExcercise}
           onChange={handleChangeNumber}
           className="w-1/3 focus:outline-none p-2 rounded border border-gray-300"
@@ -225,21 +239,18 @@ const SocialHistory = ({
 
       {/* totalSessionOfExcercise */}
       <div className="flex flex-col gap-3 w-full">
-        <label htmlFor="totalSessionOfExcercise">
-          How much time do you excercise per session?
-        </label>
+        <label>How much time do you excercise per session?</label>
         <select
           name="totalSessionOfExcercise"
-          id="totalSessionOfExcercise"
           value={formData.totalSessionOfExcercise}
           onChange={handleChange}
           className="w-1/3 focus:outline-none p-2 rounded border border-gray-300"
         >
-          <option value="1hour">1 Hour</option>
-          <option value="15minutesorless">15 minutes or Less</option>
-          <option value="30minutes">30 minutes</option>
-          <option value="morethan1hour">More than 1 Hour</option>
-          <option value="notapplicable">Not Applicable</option>
+          <option value="1 hour">1 Hour</option>
+          <option value="15 minutes or less">15 minutes or Less</option>
+          <option value="30 minutes">30 minutes</option>
+          <option value="more than 1hour">More than 1 Hour</option>
+          <option value="not applicable">Not Applicable</option>
         </select>
       </div>
 
@@ -273,12 +284,9 @@ const SocialHistory = ({
 
       {/* otherExcerciseType */}
       <div className="flex flex-col gap-3">
-        <label htmlFor="otherExcerciseType">
-          If you have any other excercise(specify)
-        </label>
+        <label>If you have any other excercise(specify)</label>
         <input
           name="otherExcerciseType"
-          id="otherExcerciseType"
           placeholder="Enter Exercise"
           value={formData.otherExcerciseType}
           onChange={handleChange}
@@ -291,22 +299,19 @@ const SocialHistory = ({
 
       {/* sleepOfHours */}
       <div className="flex flex-col gap-3 w-full">
-        <label htmlFor="sleepOfHours">
-          How many hours of sleep do you get per night?
-        </label>
+        <label>How many hours of sleep do you get per night?</label>
         <select
           name="sleepOfHours"
-          id="sleepOfHours"
           value={formData.sleepOfHours}
-          onChange={handleChangeNumber}
+          onChange={handleChange}
           className="w-1/3 focus:outline-none p-2 rounded border border-gray-300"
         >
-          <option value="1">4 or Less</option>
-          <option value="2">5</option>
-          <option value="3">6</option>
-          <option value="4">7</option>
-          <option value="5">8</option>
-          <option value="6">9 or More</option>
+          <option value="4 or less">4 or Less</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9 or more">9 or More</option>
         </select>
       </div>
 
@@ -314,19 +319,16 @@ const SocialHistory = ({
 
       {/* problemInSleep */}
       <div className="flex flex-col gap-3 w-full">
-        <label htmlFor="problemInSleep">
-          Do you have any problems in/during sleeping?
-        </label>
+        <label>Do you have any problems in/during sleeping?</label>
         <select
           name="problemInSleep"
-          id="problemInSleep"
           value={formData.problemInSleep}
-          onChange={handleChangeNumber}
+          onChange={handleChange}
           className="w-1/3 focus:outline-none p-2 rounded border border-gray-300"
         >
-          <option value="1">No</option>
-          <option value="2">Sometimes</option>
-          <option value="3">Yes</option>
+          <option value="no">No</option>
+          <option value="sometimes">Sometimes</option>
+          <option value="yes">Yes</option>
         </select>
       </div>
 
@@ -339,13 +341,12 @@ const SocialHistory = ({
           <div className="flex items-center gap-1 pt-2">
             <input
               type="radio"
-              id="currentsmoker"
               name="smokeType"
               value="currentsmoker"
               checked={formData.smokeType === "currentsmoker"}
               onChange={handleChange}
             />
-            <label htmlFor="currentsmoker">Current Smoker</label>
+            <label>Current Smoker</label>
           </div>
 
           <div className="flex items-center gap-1 pt-2">
@@ -357,7 +358,7 @@ const SocialHistory = ({
               checked={formData.smokeType === "usedtosmoke"}
               onChange={handleChange}
             />
-            <label htmlFor="usedtosmoke">Used to smoke</label>
+            <label>Used to smoke</label>
           </div>
 
           <div className="flex items-center gap-1 pt-2">
@@ -369,7 +370,7 @@ const SocialHistory = ({
               checked={formData.smokeType === "neversmoke"}
               onChange={handleChange}
             />
-            <label htmlFor="neversmoke">Never smoke</label>
+            <label>Never smoke</label>
           </div>
         </div>
       </div>
@@ -396,7 +397,7 @@ const SocialHistory = ({
                 })
               }
             />
-            <label htmlFor="yes">Yes</label>
+            <label>Yes</label>
           </div>
 
           <div className="flex items-center gap-1 pt-2">
@@ -415,7 +416,7 @@ const SocialHistory = ({
                 })
               }
             />
-            <label htmlFor="no">No</label>
+            <label>No</label>
           </div>
         </div>
       </div>
@@ -424,12 +425,9 @@ const SocialHistory = ({
 
       {/* alcoholicBeveragesContent */}
       <div className="flex flex-col gap-3 w-full">
-        <label htmlFor="alcoholicBeveragesContent">
-          How many alcoholic beverages do you drink per week?
-        </label>
+        <label>How many alcoholic beverages do you drink per week?</label>
         <select
           name="alcoholicBeveragesContent"
-          id="alcoholicBeveragesContent"
           value={formData.alcoholicBeveragesContent}
           onChange={handleChange}
           className="w-1/3 focus:outline-none p-2 rounded border border-gray-300"
@@ -447,12 +445,9 @@ const SocialHistory = ({
 
       {/* livingSituation */}
       <div className="flex flex-col gap-3 w-full">
-        <label htmlFor="livingSituation">
-          What is your current living situation?
-        </label>
+        <label>What is your current living situation?</label>
         <select
           name="livingSituation"
-          id="livingSituation"
           value={formData.livingSituation}
           onChange={handleChange}
           className="w-1/3 focus:outline-none p-2 rounded border border-gray-300"
@@ -480,12 +475,9 @@ const SocialHistory = ({
 
       {/* highestEducation */}
       <div className="flex flex-col gap-3 w-full">
-        <label htmlFor="highestEducation">
-          What is your highest education level?
-        </label>
+        <label>What is your highest education level?</label>
         <select
           name="highestEducation"
-          id="highestEducation"
           value={formData.highestEducation}
           onChange={handleChange}
           className="w-1/3 focus:outline-none p-2 rounded border border-gray-300"
@@ -507,12 +499,9 @@ const SocialHistory = ({
 
       {/* healthAffectStress */}
       <div className="flex flex-col gap-3 w-full">
-        <label htmlFor="healthAffectStress">
-          In past year, how much has stress affected your health?
-        </label>
+        <label>In past year, how much has stress affected your health?</label>
         <select
           name="healthAffectStress"
-          id="healthAffectStress"
           value={formData.healthAffectStress}
           onChange={handleChange}
           className="w-1/3 focus:outline-none p-2 rounded border border-gray-300"
@@ -527,13 +516,12 @@ const SocialHistory = ({
 
       {/* satisfactionLevel */}
       <div className="flex flex-col gap-3 w-full">
-        <label htmlFor="satisfactionLevel">
+        <label>
           In general, how satisfied are you with your life? (including personal
           and professional aspects)
         </label>
         <select
           name="satisfactionLevel"
-          id="satisfactionLevel"
           value={formData.satisfactionLevel}
           onChange={handleChange}
           className="w-1/3 focus:outline-none p-2 rounded border border-gray-300"
@@ -548,13 +536,12 @@ const SocialHistory = ({
 
       {/* isExposedToToxicHazardousSubstance" */}
       <div className="flex flex-col gap-3 w-full">
-        <label htmlFor="isExposedToToxicHazardousSubstance">
+        <label>
           Have you been exposed to any toxic or hazardous substances ? Please
           describe.
         </label>
         <input
           type="text"
-          id="isExposedToToxicHazardousSubstance"
           name="isExposedToToxicHazardousSubstance"
           value={formData.isExposedToToxicHazardousSubstance}
           onChange={handleChange}
@@ -567,14 +554,13 @@ const SocialHistory = ({
 
       {/* isDietaryRestrictions */}
       <div>
-        <label htmlFor="isDietaryRestrictions">
+        <label>
           Do you have any dietary restrictions ? Please describe.(ex: low salt,
           vegetarian, no sugar, etc.)
         </label>
         <input
           type="text"
           name="isDietaryRestrictions"
-          id="isDietaryRestrictions"
           value={formData.isDietaryRestrictions}
           onChange={handleChange}
           placeholder="Enter dietary restrictions"
@@ -586,14 +572,13 @@ const SocialHistory = ({
 
       {/* isReligiousSpiritualPhilosophicalPersonalConvicts */}
       <div>
-        <label htmlFor="isReligiousSpiritualPhilosophicalPersonalConvicts">
+        <label>
           Do you have any religious, spiritual, philosphical or personal
           convictins that may affect how you should betreated medically ? Please
           describe.
         </label>
         <input
           type="text"
-          id="isReligiousSpiritualPhilosophicalPersonalConvicts"
           name="isReligiousSpiritualPhilosophicalPersonalConvicts"
           value={formData.isReligiousSpiritualPhilosophicalPersonalConvicts}
           onChange={handleChange}
@@ -618,9 +603,8 @@ const SocialHistory = ({
               value="yes"
               checked={abusiveRelationship}
               onChange={() => handleAbusiveRelationshipChange(true)}
-              id="abusiveRelationYes"
             />
-            <label htmlFor="abusiveRelationYes">Yes</label>
+            <label>Yes</label>
           </div>
 
           <div className="flex items-center gap-1 pt-2">
@@ -630,20 +614,16 @@ const SocialHistory = ({
               value="no"
               checked={!abusiveRelationship}
               onChange={() => handleAbusiveRelationshipChange(false)}
-              id="abusiveRelationNo"
             />
-            <label htmlFor="abusiveRelationNo">No</label>
+            <label>No</label>
           </div>
         </div>
 
         {/* verbalEmotionalPhysicalSexualRelationRemark */}
         {abusiveRelationship && (
           <div className="mt-3">
-            <label htmlFor="verbalEmotionalPhysicalSexualRelationRemark">
-              Please provide details (if any):
-            </label>
+            <label>Please provide details (if any):</label>
             <textarea
-              id="verbalEmotionalPhysicalSexualRelationRemark"
               name="verbalEmotionalPhysicalSexualRelationRemark"
               value={formData.verbalEmotionalPhysicalSexualRelationRemark}
               onChange={handleChange}
@@ -670,9 +650,8 @@ const SocialHistory = ({
               value="yes"
               checked={recentChanges}
               onChange={() => handleRecentChanges(true)}
-              id="changeYes"
             />
-            <label htmlFor="changeYes">Yes</label>
+            <label>Yes</label>
           </div>
 
           <div className="flex items-center gap-1 pt-2">
@@ -682,20 +661,16 @@ const SocialHistory = ({
               value="no"
               checked={!recentChanges}
               onChange={() => handleRecentChanges(false)}
-              id="changeNo"
             />
-            <label htmlFor="changeNo">No</label>
+            <label>No</label>
           </div>
         </div>
 
         {/* changeInSexualDesireRemark */}
         {recentChanges && (
           <div className="mt-3">
-            <label htmlFor="changeInSexualDesireRemark">
-              Please provide details (if any):
-            </label>
+            <label>Please provide details (if any):</label>
             <textarea
-              id="changeInSexualDesireRemark"
               name="changeInSexualDesireRemark"
               value={formData.changeInSexualDesireRemark}
               onChange={handleChange}
@@ -722,9 +697,8 @@ const SocialHistory = ({
               value="yes"
               checked={hasSTI}
               onChange={() => handleSTIChange(true)}
-              id="STIYes"
             />
-            <label htmlFor="STIYes">Yes</label>
+            <label>Yes</label>
           </div>
 
           <div className="flex items-center gap-1 pt-2">
@@ -734,9 +708,8 @@ const SocialHistory = ({
               value="no"
               checked={!hasSTI}
               onChange={() => handleSTIChange(false)}
-              id="STINo"
             />
-            <label htmlFor="STINo">No</label>
+            <label>No</label>
           </div>
         </div>
       </div>
@@ -745,7 +718,7 @@ const SocialHistory = ({
 
       {/* hivandstisProtectionDescription */}
       <div>
-        <label htmlFor="hivandstisProtectionDescription">
+        <label>
           How do you protect yourself from HIV and other STIs ? Please describe.
         </label>
         <input
@@ -753,7 +726,6 @@ const SocialHistory = ({
           name="hivandstisProtectionDescription"
           value={formData.hivandstisProtectionDescription}
           onChange={handleChange}
-          id="hivandstisProtectionDescription"
           placeholder="Describe how you protect yourself from HIV and STIs."
           className="w-11/12 h-20 border border-gray-300 p-3 mt-3 rounded focus:outline-none"
         />
@@ -772,7 +744,7 @@ const SocialHistory = ({
               name="isPainDuringAfterSex"
               value="true"
               checked={formData.isPainDuringAfterSex === true}
-              onChange={handleChangeNumber}
+              onChange={handleChange}
             />
             <label htmlFor="painYes">Yes</label>
           </div>

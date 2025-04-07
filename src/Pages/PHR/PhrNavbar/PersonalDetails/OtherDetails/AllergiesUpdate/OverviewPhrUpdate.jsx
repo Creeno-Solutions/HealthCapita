@@ -13,7 +13,7 @@ const OverviewPhrUpdate = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(location.state?.activeTab || 0);
   const [isPasswordProtected, setIsPasswordProtected] = useState(false);
-  const [isdisplayUnderSummaryPage, setIsDisplayUnderSummaryPage] =
+  const [isDisplayUnderSummaryPage, setIsDisplayUnderSummaryPage] =
     useState(false);
   const navigate = useNavigate();
 
@@ -39,9 +39,8 @@ const OverviewPhrUpdate = () => {
       case 0:
         return (
           <AllergiesAndDrugs
-            setActiveTab={setActiveTab}
             isPasswordProtected={isPasswordProtected}
-            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            isDisplayUnderSummaryPage={isDisplayUnderSummaryPage}
             handleProtectChange={onProtectChange}
             handleDisplayChange={onDisplayChange}
             handleTabChange={handleTabChange}
@@ -50,9 +49,8 @@ const OverviewPhrUpdate = () => {
       case 1:
         return (
           <CurrentHealthStatus
-            setActiveTab={setActiveTab}
             isPasswordProtected={isPasswordProtected}
-            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            isDisplayUnderSummaryPage={isDisplayUnderSummaryPage}
             handleProtectChange={onProtectChange}
             handleDisplayChange={onDisplayChange}
             handleTabChange={handleTabChange}
@@ -62,7 +60,7 @@ const OverviewPhrUpdate = () => {
         return (
           <DistinguishingMarks
             isPasswordProtected={isPasswordProtected}
-            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            isDisplayUnderSummaryPage={isDisplayUnderSummaryPage}
             handleProtectChange={onProtectChange}
             handleDisplayChange={onDisplayChange}
             handleTabChange={handleTabChange}
@@ -71,9 +69,8 @@ const OverviewPhrUpdate = () => {
       case 3:
         return (
           <Ethnicity
-            setActiveTab={setActiveTab}
             isPasswordProtected={isPasswordProtected}
-            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            isDisplayUnderSummaryPage={isDisplayUnderSummaryPage}
             handleProtectChange={onProtectChange}
             handleDisplayChange={onDisplayChange}
             handleTabChange={handleTabChange}
@@ -83,7 +80,7 @@ const OverviewPhrUpdate = () => {
         return (
           <InfantHistory
             isPasswordProtected={isPasswordProtected}
-            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            isDisplayUnderSummaryPage={isDisplayUnderSummaryPage}
             handleProtectChange={onProtectChange}
             handleDisplayChange={onDisplayChange}
             handleTabChange={handleTabChange}
@@ -93,10 +90,11 @@ const OverviewPhrUpdate = () => {
         return (
           <SocialHistory
             isPasswordProtected={isPasswordProtected}
-            isdisplayUnderSummaryPage={isdisplayUnderSummaryPage}
+            isDisplayUnderSummaryPage={isDisplayUnderSummaryPage}
             handleProtectChange={onProtectChange}
             handleDisplayChange={onDisplayChange}
             handleTabChange={handleTabChange}
+            closePage={closePage}
           />
         );
       default:
@@ -128,7 +126,7 @@ const OverviewPhrUpdate = () => {
           <PhrProtectwithPassword
             Title="Other Details"
             isProtected={isPasswordProtected}
-            isDisplayed={isdisplayUnderSummaryPage}
+            isDisplayed={isDisplayUnderSummaryPage}
             onProtectChange={onProtectChange}
             onDisplayChange={onDisplayChange}
           />
