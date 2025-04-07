@@ -29,7 +29,7 @@ const FamilyDetailsUpdate = () => {
     age: 0,
     mobile: "",
     isPasswordProtected: false,
-    isDisplayUnderSummary: false,
+    isDisplayUnderSummaryPage: false,
     userId: userId,
   });
 
@@ -104,7 +104,7 @@ const FamilyDetailsUpdate = () => {
       console.log("chandu");
     }
   };
-
+console.log(formData.isDisplayUnderSummary)
   return (
     <>
       <div className="min-h-screen bg-white flex flex-col">

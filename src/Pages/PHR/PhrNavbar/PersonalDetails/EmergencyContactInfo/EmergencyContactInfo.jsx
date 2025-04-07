@@ -38,6 +38,9 @@ const EmergencyContactInfo = ({
       [name]: value,
     }));
   };
+  const closeContactsForm = () => {
+    setContactsUpdateForm(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,7 +92,7 @@ const EmergencyContactInfo = ({
       const response = await axios.get(
         `https://service.healthcapita.com/api/PHR/GetEmergencyContactById?emergencyContactId=${contactId}&userId=${userId}`
       );
-      if (response?.data?.isData === true) {
+      if (response?.data?.isData) {
         setSelectedContact(response.data.data);
         setContactsUpdateForm(true);
       }
@@ -123,7 +126,7 @@ const EmergencyContactInfo = ({
           <div className="flex items-center gap-3">
             <img
               className="p-2 rounded-full bg-[#FFF1F1]"
-              src={PhrAssets.EmergencyContact}
+              src={PhrAssets.EmergencyContact}  
               alt=""
             />
             <p className="font-medium landing-5 text-lg text-[#111928]">

@@ -13,7 +13,7 @@ const EmployerInfo = ({ showUpdateButton = true, showAddButton = true }) => {
   const openEmployerInfoUpdatePage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     navigate("/EmployerInfoUpdate");
-  };
+  }
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,8 +32,8 @@ const EmployerInfo = ({ showUpdateButton = true, showAddButton = true }) => {
     pinCode: "",
     phone: "",
     countryCode: "",
-    isPasswordProtected: true,
-    isDisplayUnderSummary: true,
+    isPasswordProtected: false,
+    isDisplayUnderSummaryPage: false,
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,6 +95,7 @@ const EmployerInfo = ({ showUpdateButton = true, showAddButton = true }) => {
         setLoading(false);
       }
     };
+
     fetchData();
   }, []);
 

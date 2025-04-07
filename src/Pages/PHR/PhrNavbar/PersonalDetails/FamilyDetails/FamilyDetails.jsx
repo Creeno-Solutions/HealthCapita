@@ -6,11 +6,12 @@ import PlusAddBtn from "../../../../../CommonComponents/PlusAddBtn/PlusAddBtn";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Save from "../../../../../CommonComponents/Save/Save";
-import UserInfo from "../../../../../utils/UserInfo";
+// import UserInfo from "../../../../../utils/UserInfo";
 
 const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
   const navigate = useNavigate();
-  const userId = UserInfo();
+  // const userId = UserInfo();
+  const userId = 10
 
   const openFamilyDetailsUpdatePage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -39,7 +40,7 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
     age: 0,
     mobile: "",
     isPasswordProtected: false,
-    isDisplayUnderSummary: false,
+    sDisplayUnderSummaryPage:false,
     userId: userId,
   });
   const handleChange = (e) => {
@@ -72,13 +73,17 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
       console.error("Error saving contact information", error);
     }
   };
+  const closeContactsForm = () => {
+    setContactsUpdateForm(false);
+  };
 
   const openContactsForm = async (contactId) => {
     try {
       const response = await axios.get(
-        `https://service.healthcapita.com/api/PHR/GetFamilyContactDetailById?UserId=111&FamilyContactId=${contactId}`
+        `https://service.healthcapita.com/api/PHR/GetFamilyContactDetailById?UserId=${userId}&FamilyContactId=${contactId}`
       );
-      if (response?.data?.isData === true) {
+      console.log('fam',response?.data?.data)
+      if (response?.data?.isData) {
         setSelectedContact(response.data.data);
         setContactsUpdateForm(true);
       }
@@ -140,9 +145,19 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
               Family Details
             </p>
           </div>
+<<<<<<< HEAD
           {showAddButton && (
             <PlusAddBtn onClick={openFamilyDetailsUpdatePage} />
           )}
+=======
+          <div className="flex items-center justify-center">
+            <img src={PhrAssets.PlusAdd} alt="" />
+            {showAddButton && (
+              <PlusAddBtn onClick={openFamilyDetailsUpdatePage} />
+            )}
+
+          </div>
+>>>>>>> b929df9133c828fc1a011a81ca8f147224b17ed1
         </div>
         <p className="border border-gray-300 px-2 my-3"></p>
 

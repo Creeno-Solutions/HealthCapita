@@ -27,7 +27,7 @@ const InsuranceDetailsUpdate = () => {
     premiumAmount: "",
     insurancePolicyNumber: "",
     isPasswordProtected: false,
-    isDisplayUnderSummary: false,
+    isDisplayUnderSummaryPage: false,
     status: "",
     maturity: "",
     recStatus: "",

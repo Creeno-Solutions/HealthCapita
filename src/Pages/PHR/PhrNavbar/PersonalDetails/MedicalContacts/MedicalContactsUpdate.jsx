@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { PhrAssets } from "../../../../../assets/PHR/assets";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import UserInfo from "../../../../../utils/UserInfo";
+// import UserInfo from "../../../../../utils/UserInfo";
 import PhrUpdateHeader from "../../../../../CommonComponents/PhrUpdateHeader/PhrUpdateHeader";
 import PhrProtectwithPassword from "../../../../../CommonComponents/PhrUpdateHeader/PhrProtectwithPassword";
 import UpdateDetailsBtn from "../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
@@ -10,10 +10,12 @@ import UpdateDetailsBtn from "../../../../../CommonComponents/UpdateDetailsBtn/U
 const MedicalContactsUpdate = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const userId = UserInfo();
+  // const userId = UserInfo();
+  const userId = 10
   const [formData, setFormData] = useState({
+    medicalContactId: 0,
     userId: userId,
-    medicalContactTypeId: "",
+    medicalContactTypeId: 0,
     name: "",
     countryId: "",
     mobile: "",
@@ -22,14 +24,14 @@ const MedicalContactsUpdate = () => {
     recStatus: true,
     specializationId: "",
     otherSpecializationName: "",
+    isPasswordProtected: false,
+    isDisplayUnderSummaryPage: false,
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://service.healthcapita.com/api/PHR/GetMedicalContactById?UserId=${userId}`
-        );
+        const response = await axios.get(`https://service.healthcapita.com/api/PHR/GetMedicalContactById?UserId=${userId}`);
         if (response?.data?.isData === true) {
           console.log("response.....", response?.data?.data);
           setFormData(response?.data?.data);
@@ -54,10 +56,7 @@ const MedicalContactsUpdate = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(
-        "https://service.healthcapita.com/api/PHR/SaveMedicalContact",
-        formData
-      );
+      const response = await axios.post("https://service.healthcapita.com/api/PHR/SaveMedicalContact", formData);
       if (response?.data?.status) {
         closePage();
       }
@@ -73,7 +72,7 @@ const MedicalContactsUpdate = () => {
         <PhrProtectwithPassword
           Title="Medical Contacts"
           isProtected={formData.isPasswordProtected}
-          isDisplayed={formData.isDisplayUnderSummary}
+          isDisplayed={formData.isDisplayUnderSummaryPage}
           onProtectChange={handleChange}
           onDisplayChange={handleChange}
         />
@@ -82,12 +81,7 @@ const MedicalContactsUpdate = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             <div className="flex flex-col gap-2">
               <label className="font-normal">Medical Contact Type</label>
-              <select
-                name="medicalContactTypeId"
-                value={formData.medicalContactTypeId}
-                onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded-md w-4/5 focus:outline-none"
-              >
+              <select name="medicalContactTypeId" value={formData.medicalContactTypeId} onChange={handleChange} className="border border-gray-300 py-2 px-3 rounded-md w-4/5 focus:outline-none">
                 <option value="">Select</option>
                 <option value="1">Family Physician</option>
               </select>
@@ -107,12 +101,7 @@ const MedicalContactsUpdate = () => {
 
             <div className="flex flex-col gap-2">
               <label className="font-normal">Specialization</label>
-              <select
-                name="specializationId"
-                value={formData.specializationId}
-                onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded-md w-4/5 focus:outline-none"
-              >
+              <select name="specializationId" value={formData.specializationId} onChange={handleChange} className="border border-gray-300 py-2 px-3 rounded-md w-4/5 focus:outline-none">
                 <option value="1">Select</option>
                 <option value="2">Dentist</option>
                 <option value="3">Neurologist</option>
@@ -154,12 +143,7 @@ const MedicalContactsUpdate = () => {
 
             <div className="flex flex-col gap-2">
               <label className="font-normal">Country</label>
-              <select
-                name="countryId"
-                value={formData.countryId}
-                onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded-md w-4/5 focus:outline-none"
-              >
+              <select name="countryId" value={formData.countryId} onChange={handleChange} className="border border-gray-300 py-2 px-3 rounded-md w-4/5 focus:outline-none">
                 <option value="">Select</option>
                 <option value="1">India</option>
                 <option value="2">USA</option>
