@@ -7,11 +7,12 @@ import PlusAddBtn from "../../../../../CommonComponents/PlusAddBtn/PlusAddBtn";
 import Save from "../../../../../CommonComponents/Save/Save";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import UserInfo from "../../../../../utils/UserInfo";
+// import UserInfo from "../../../../../utils/UserInfo";
 
 const MedicalContacts = ({ showUpdateButton = true, showAddButton = true }) => {
   const navigate = useNavigate();
-  const userId = UserInfo();
+  // const userId = UserInfo();
+  const userId = 10
   const openPhrMedicalContactsPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     navigate("/MedicalContactsUpdate");
@@ -22,16 +23,19 @@ const MedicalContacts = ({ showUpdateButton = true, showAddButton = true }) => {
   const [ContactsUpdateForm, setContactsUpdateForm] = useState(false);
 
   const [selectedContact, setSelectedContact] = useState({
+    medicalContactId: 0,
     userId: userId,
+    medicalContactTypeId: 0,
     name: "",
-    specializationId: "",
+    countryId: "",
     mobile: "",
-    countrycode: "",
-    emailId: "",
-    sincehowmanyyearsId: "",
-    isPasswordProtected: null,
-    isDisplayUnderSummary: null,
-    status: null,
+    email: "",
+    experience: "",
+    recStatus: true,
+    specializationId: "",
+    otherSpecializationName: "",
+    isPasswordProtected: false,
+    isDisplayUnderSummaryPage: false,
   });
 
   const openMedicalContactsForm = () => {
@@ -45,10 +49,12 @@ const MedicalContacts = ({ showUpdateButton = true, showAddButton = true }) => {
   const openContactsForm = async (contactId) => {
     try {
       const response = await axios.get(
-        `https://service.healthcapita.com/api/PHR/GetMedicalContactById?medicalcontactid=${contactId}&userId=${userId}`
+        `https://service.healthcapita.com/api/PHR/GetMedicalContact?medicalcontactid=${contactId}&userId=${userId}`
       );
-      if (response?.data?.isData === true) {
-        setSelectedContact(response.data.data);
+      
+      console.log('con',response?.data?.data)
+      if (response?.data?.isData) {
+        setSelectedContact(response?.data?.data);
         setContactsUpdateForm(true);
       }
     } catch (err) {
@@ -59,7 +65,8 @@ const MedicalContacts = ({ showUpdateButton = true, showAddButton = true }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://service.healthcapita.com/api/PHR/GetMedicalContact?UserId=${userId}`
+          `https://service.healthcapita.com/api/PHR/GetMedicalContactById?UserId=${userId}`
+          
         );
         if (response?.data?.isData) {
           console.log("response.....", response?.data?.data);
@@ -79,6 +86,7 @@ const MedicalContacts = ({ showUpdateButton = true, showAddButton = true }) => {
       [name]: value,
     }));
   };
+  console.log('selected contacts',selectedContact)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -87,9 +95,9 @@ const MedicalContacts = ({ showUpdateButton = true, showAddButton = true }) => {
         selectedContact
       );
 
-      if (response?.data?.status === true) {
+      if (response?.data?.status) {
         const updatedResponse = await axios.get(
-          `https://service.healthcapita.com/api/PHR/GetMedicalContact?UserId=${userId}`
+          `https://service.healthcapita.com/api/PHR/GetMedicalContactById?UserId=${userId}`
         );
 
         if (updatedResponse?.data?.isData === true) {
@@ -179,7 +187,7 @@ const MedicalContacts = ({ showUpdateButton = true, showAddButton = true }) => {
               <div className="flex flex-col bg-white py-2 px-3 rounded-md gap-2">
                 <p className="text-[#111928]">Email</p>
                 <p className="text-[#374151] font-semibold">
-                  {medical.emailId}
+                  {medical.email}
                 </p>
               </div>
 
@@ -241,7 +249,7 @@ const MedicalContacts = ({ showUpdateButton = true, showAddButton = true }) => {
                 <div className="flex flex-col gap-1">
                   <label>Specialization</label>
                   <select
-                    name="name"
+                    name="specializationId"
                     value={selectedContact.specializationId}
                     onChange={handleChange}
                     className="py-1 px-2 border font-medium border-gray-300 w-72 rounded-md"
@@ -279,7 +287,7 @@ const MedicalContacts = ({ showUpdateButton = true, showAddButton = true }) => {
                     <input
                       type="text"
                       name="email"
-                      value={selectedContact.email}
+                      value={selectedContact.emailId}
                       onChange={handleChange}
                       className="py-1 px-2 border font-medium border-gray-300 w-72 rounded-md"
                     />

@@ -24,7 +24,7 @@ const EmployerInfoUpdate = () => {
     phone: "",
     countryCode: "",
     isPasswordProtected: false,
-    isDisplayUnderSummary: false,
+    isDisplayUnderSummaryPage: false,
   });
 
   const handleChange = (e) => {

@@ -12,12 +12,16 @@ const EmergencyContactUpdate = () => {
   const userId = UserInfo();
 
   const [formData, setFormData] = useState({
+    emergencyContactId: 0,
+    userId: userId,
     name: "",
     countryId: "",
     relation: "",
     mobile: "",
     emailId: "",
-    userId: userId,
+    isPasswordProtected: false,
+    isDisplayUnderSummaryPage: false,
+    status: 0,
   });
 
   const closePage = () => {
@@ -36,10 +40,7 @@ const EmergencyContactUpdate = () => {
     e.preventDefault();
     // You can handle form submission here (e.g., make an API call)
     try {
-      const response = await axios.post(
-        "https://service.healthcapita.com/api/PHR/SaveEmergencyContactInformation",
-        formData
-      );
+      const response = await axios.post("https://service.healthcapita.com/api/PHR/SaveEmergencyContactInformation", formData);
 
       if (response?.data?.status) {
         closePage();
@@ -120,12 +121,7 @@ const EmergencyContactUpdate = () => {
                 <label htmlFor="country" className="font-normal">
                   Country
                 </label>
-                <select
-                  name="countryId"
-                  value={formData.countryId}
-                  onChange={handleChange}
-                  className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none"
-                >
+                <select name="countryId" value={formData.countryId} onChange={handleChange} className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none">
                   <option value="1">Select</option>
                   <option value="2">India</option>
                   <option value="3">USA</option>
