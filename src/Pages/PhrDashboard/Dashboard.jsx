@@ -1,6 +1,5 @@
 import React from "react";
 import QuickToolsAndCard from "./QuickToolsAndCard";
-
 const Dashboard = () => {
   return (
     <div>
