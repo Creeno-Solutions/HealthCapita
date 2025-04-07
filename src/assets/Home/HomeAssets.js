@@ -24,6 +24,7 @@ import MainLogo from './MainLogo.svg'
 import FamilyMember from './FamilyMember.svg'
 import HealthCard from './HealthCard.svg'
 import Scheduler from './Scheduler.svg'
+import Logo from './Logo.svg'
 export const HomeAssets = {
     bell,
     ellipse,
@@ -50,6 +51,7 @@ export const HomeAssets = {
     MainLogo,
     FamilyMember,
     HealthCard,
-    Scheduler
+    Scheduler,
+    Logo
 
 }

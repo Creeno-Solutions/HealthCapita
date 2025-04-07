@@ -12,7 +12,7 @@ const EmergencyContactInfo = ({
   showUpdateButton = true,
   showAddButton = true,
 }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   const openEmergencyContactUpdatePage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
