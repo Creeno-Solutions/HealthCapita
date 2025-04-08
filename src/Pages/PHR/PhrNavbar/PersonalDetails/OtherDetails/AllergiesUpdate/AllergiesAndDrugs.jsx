@@ -2,32 +2,32 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Oval } from "react-loader-spinner";
 import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
-import PhrUpdateHeader from "../../../../../../CommonComponents/PhrUpdateHeader/PhrUpdateHeader";
-import PhrProtectwithPassword from "../../../../../../CommonComponents/PhrUpdateHeader/PhrProtectwithPassword";
+
 const AllergiesAndDrugs = ({
-  setActiveTab,
   isPasswordProtected,
-  isdisplayUnderSummaryPage,
-  setIsPasswordProtected,
-  setIsDisplayUnderSummaryPage,
+  isDisplayUnderSummaryPage,
+  handleProtectChange,
+  handleDisplayChange,
+  handleTabChange,
 }) => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    isPasswordProtected: false,
+    isDisplayUnderSummaryPage: false,
+  });
   const [loading, setLoading] = useState(true);
 
   const [selectedAllergies, setSelectedAllergies] = useState({});
   const [updatedAllergies, setUpdatedAllergies] = useState(new Set());
   const [customAllergyNames, setCustomAllergyNames] = useState({});
 
-  const declaredUserId = 123;
-  const declaredIsPasswordProtected = true;
-  const declaredIsDisplayUnderSummaryPage = true;
-
+  const declaredUserId = 10;
+  //10, 15
   const fetchAllergies = async () => {
     try {
       const response = await axios.get(
         `https://service.healthcapita.com/api/PHR/GetAllergyData?userId=${declaredUserId}`
       );
-
+      console.log("allergies", response);
       const data = response.data.data || [];
       const groupedAllergies = data.reduce((acc, allergy) => {
         const group = allergy.allergiesDrugGroupName;
@@ -78,9 +78,7 @@ const AllergiesAndDrugs = ({
     const updatedData = Array.from(updatedAllergies)
       .map((id) => {
         for (const group in formData) {
-          //formData
           const allergy = formData[group].find(
-            //formData
             (item) => item.allergyDetailId === Number(id)
           );
           if (allergy) {
@@ -102,8 +100,8 @@ const AllergiesAndDrugs = ({
                   ? customAllergyNames[allergy.allergyDetailId] || "Other"
                   : allergy.allergyName,
               ischecked: selectedAllergies[id],
-              isPasswordProtected: declaredIsPasswordProtected,
-              isdisplayUnderSummaryPage: declaredIsDisplayUnderSummaryPage,
+              isPasswordProtected: isPasswordProtected,
+              isDisplayUnderSummaryPage: isDisplayUnderSummaryPage,
             };
           }
         }
@@ -123,6 +121,7 @@ const AllergiesAndDrugs = ({
       );
       console.log("Updated allergies sent successfully:", response);
       setUpdatedAllergies(new Set());
+      handleTabChange(1);
     } catch (error) {
       console.error("Error updating allergies:", error);
     }

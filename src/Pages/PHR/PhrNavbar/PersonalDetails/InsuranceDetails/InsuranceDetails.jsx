@@ -65,10 +65,7 @@ const InsuranceDetails = ({ showUpdateButton = true }) => {
             Insurance Details
           </p>
         </div>
-        <div className="flex justify-center items-center">
-          <img src={PhrAssets.PlusAdd} alt="" />
-          {showUpdateButton && <PlusAddBtn onClick={openPhrInsuranceAddpage} />}
-        </div>
+        {showUpdateButton && <PlusAddBtn onClick={openPhrInsuranceAddpage} />}
       </div>
       <p className="border border-gray-300 px-2 my-3"></p>
 

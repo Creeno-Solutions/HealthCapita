@@ -5,11 +5,12 @@ import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBt
 
 const InfantHistory = ({
   isPasswordProtected,
-  isdisplayUnderSummaryPage,
+  isDisplayUnderSummaryPage,
   handleProtectChange,
   handleDisplayChange,
   handleTabChange,
 }) => {
+  const userId = 10;
   const [data, setData] = useState({
     jaundice: false,
     soreThroat: false,
@@ -23,8 +24,7 @@ const InfantHistory = ({
 
   const [isLoading, setIsLoading] = useState(true);
   const [isDefectVisible, setIsDefectVisible] = useState(false);
-  const userId = 22; // Set your userId here
-  // 100, 99,
+
   const GetInfantHistoryApi = async () => {
     try {
       const response = await axios.get(
@@ -47,7 +47,7 @@ const InfantHistory = ({
             target: { checked: apiData.isPasswordProtected || false },
           });
           handleDisplayChange({
-            target: { checked: apiData.isdisplayUnderSummaryPage || false },
+            target: { checked: apiData.isDisplayUnderSummaryPage || false },
           });
         }
 
@@ -82,7 +82,7 @@ const InfantHistory = ({
       intExtDefect: data.intExtDefect,
       remarks: data.intExtDefect ? data.remarks : "",
       isPasswordProtected: isPasswordProtected || false,
-      isDisplayUnderSummaryPage: isdisplayUnderSummaryPage || false,
+      isDisplayUnderSummaryPage: isDisplayUnderSummaryPage || false,
     };
 
     try {

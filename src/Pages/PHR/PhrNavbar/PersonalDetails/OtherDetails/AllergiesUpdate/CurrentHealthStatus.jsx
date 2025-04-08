@@ -3,44 +3,53 @@ import axios from "axios";
 import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
 
 const CurrentHealthStatus = ({
-  setActiveTab,
   isPasswordProtected,
-  isdisplayUnderSummaryPage,
+  isDisplayUnderSummaryPage,
   handleProtectChange,
   handleDisplayChange,
   handleTabChange,
 }) => {
+  const userId = 10;
   const [data, setData] = useState({
     autoid: 0,
-    userId: 10,
+    userId: userId,
     currentSuffering: "",
     currentSufferingStatus: false,
     currentTakingAnyTreatment: "",
     currentTreatmentStatus: false,
     isPasswordProtected: false,
-    isdisplayUnderSummaryPage: false,
+    isDisplayUnderSummaryPage: false,
   });
   // 22
   const GetCurrentHealthStatusApi = async () => {
     try {
       const response = await axios.get(
-        `https://service.healthcapita.com/api/PHR/GetCurentHealthStatusyId?UserId=${data.userId}`
+        `https://service.healthcapita.com/api/PHR/GetCurentHealthStatusyId?UserId=${userId}`
       );
       console.log("CurrentHealthStatus", response);
       if (response?.data?.isData) {
         const responseData = response.data.data;
-        setData({
-          ...data,
-          autoid: responseData.autoid || 0,
-          currentSuffering: responseData.currentSuffering || "",
-          currentSufferingStatus: responseData.currentSufferingStatus || false,
-          currentTakingAnyTreatment:
-            responseData.currentTakingAnyTreatment || "",
-          currentTreatmentStatus: responseData.currentTreatmentStatus || false,
-          isPasswordProtected: responseData.isPasswordProtected || false,
-          isdisplayUnderSummaryPage:
-            responseData.isdisplayUnderSummaryPage || false,
-        });
+        if (responseData) {
+          setData({
+            ...data,
+            autoid: responseData.autoid || 0,
+            currentSuffering: responseData.currentSuffering || "",
+            currentSufferingStatus:
+              responseData.currentSufferingStatus || false,
+            currentTakingAnyTreatment:
+              responseData.currentTakingAnyTreatment || "",
+            currentTreatmentStatus:
+              responseData.currentTreatmentStatus || false,
+          });
+          handleProtectChange({
+            target: { checked: responseData.isPasswordProtected || false },
+          });
+          handleDisplayChange({
+            target: {
+              checked: responseData.isDisplayUnderSummaryPage || false,
+            },
+          });
+        }
       }
     } catch (error) {
       console.log("Error fetching data:", error);
@@ -58,7 +67,7 @@ const CurrentHealthStatus = ({
         {
           ...data,
           isPasswordProtected: isPasswordProtected,
-          isdisplayUnderSummaryPage: isdisplayUnderSummaryPage,
+          isDisplayUnderSummaryPage: isDisplayUnderSummaryPage,
         }
       );
       console.log("response", response);

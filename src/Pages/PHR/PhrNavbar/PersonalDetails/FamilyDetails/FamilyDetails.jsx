@@ -11,7 +11,7 @@ import Save from "../../../../../CommonComponents/Save/Save";
 const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
   const navigate = useNavigate();
   // const userId = UserInfo();
-  const userId = 10
+  const userId = 10;
 
   const openFamilyDetailsUpdatePage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -40,7 +40,7 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
     age: 0,
     mobile: "",
     isPasswordProtected: false,
-    sDisplayUnderSummaryPage:false,
+    sDisplayUnderSummaryPage: false,
     userId: userId,
   });
   const handleChange = (e) => {
@@ -82,7 +82,7 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
       const response = await axios.get(
         `https://service.healthcapita.com/api/PHR/GetFamilyContactDetailById?UserId=${userId}&FamilyContactId=${contactId}`
       );
-      console.log('fam',response?.data?.data)
+      console.log("fam", response?.data?.data);
       if (response?.data?.isData) {
         setSelectedContact(response.data.data);
         setContactsUpdateForm(true);
@@ -150,7 +150,6 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
             {showAddButton && (
               <PlusAddBtn onClick={openFamilyDetailsUpdatePage} />
             )}
-
           </div>
         </div>
         <p className="border border-gray-300 px-2 my-3"></p>

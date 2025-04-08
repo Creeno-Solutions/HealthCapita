@@ -5,22 +5,23 @@ import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBt
 
 const DistinguishingMarks = ({
   isPasswordProtected,
-  isdisplayUnderSummaryPage,
+  isDisplayUnderSummaryPage,
   handleProtectChange,
   handleDisplayChange,
   handleTabChange,
 }) => {
+  const userId = 10;
   const [data, setData] = useState({
     tattoo: "no",
     scar: "no",
     burnMark: "no",
     isPasswordProtected: false,
-    isdisplayUnderSummaryPage: false,
+    isDisplayUnderSummaryPage: false,
   });
   const [colorMasterData, setColorMasterData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [visibleBirthMarks, setVisibleBirthMarks] = useState(1);
-  const userId = 40;
+
   //30, 40
 
   // console.log(data);
@@ -50,7 +51,7 @@ const DistinguishingMarks = ({
           target: { checked: userDetails.isPasswordProtected || false },
         });
         handleDisplayChange({
-          target: { checked: userDetails.isdisplayUnderSummaryPage || false },
+          target: { checked: userDetails.isDisplayUnderSummaryPage || false },
         });
       }
 
@@ -95,7 +96,7 @@ const DistinguishingMarks = ({
       userId: userId,
       ...updatedData,
       isPasswordProtected: isPasswordProtected,
-      isdisplayUnderSummaryPage: isdisplayUnderSummaryPage,
+      isDisplayUnderSummaryPage: isDisplayUnderSummaryPage,
     };
 
     console.log("distinguishingggggg:", payload);
