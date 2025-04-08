@@ -9,7 +9,7 @@ import PhrProtectwithPassword from "../../../../../CommonComponents/PhrUpdateHea
 import UpdateDetailsBtn from "../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
 
 const FamilyDetailsUpdate = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const userId = UserInfo();
   const [formData, setFormData] = useState({
     name: "",
