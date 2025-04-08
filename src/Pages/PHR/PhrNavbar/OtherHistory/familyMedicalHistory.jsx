@@ -6,7 +6,7 @@ const FamilyMedicalHistory = () => {
     navigate("/otherHistoryFields", {
       state: { activeTab: 6 },
     });
-    window.scrollTo({ top: 0, bhavious: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
   return (
     <>
@@ -16,6 +16,15 @@ const FamilyMedicalHistory = () => {
           <Update onClick={openFamilyMedicalHistoryUpdatePage} />
         </div>
         <p className="border-b border-gray-200 px-2 my-3"></p>
+        <div className="w-full bg-white py-4 px-4">
+          <p className="flex mb-3">
+            Family History Of Asthama :{" "}
+            <span className="font-semibold">Yes</span>
+          </p>
+          <p className="flex">
+            Comments: <span className="font-semibold">--</span>
+          </p>
+        </div>
       </div>
     </>
   );

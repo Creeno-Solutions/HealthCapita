@@ -56,7 +56,9 @@ const Hearingupdate = () => {
               <div className="w-1/2">
                 <input
                   type="text"
-                  placeholder="Write text here..."
+                  placeholder={`Write ${key
+                    .replace(/([A-Z])/g, " $1")
+                    .trim()} here`}
                   maxLength={50}
                   value={textInputs[key] || ""}
                   onChange={(e) => handleTextChange(key, e.target.value)}

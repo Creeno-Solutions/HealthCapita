@@ -70,7 +70,7 @@ const CurrentHealthStatus = ({
           isDisplayUnderSummaryPage: isDisplayUnderSummaryPage,
         }
       );
-      console.log("response", response);
+      console.log("responseDataaaaaaaaaa", response);
       if (response?.data?.status) {
         console.log(" Data updated successfully");
         handleTabChange(2);

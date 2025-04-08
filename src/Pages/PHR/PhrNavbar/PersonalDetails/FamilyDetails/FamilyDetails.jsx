@@ -148,6 +148,7 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
           {showAddButton && (
             <PlusAddBtn onClick={openFamilyDetailsUpdatePage} />
           )}
+<<<<<<< HEAD
 =======
           <div className="flex items-center justify-center">
             <img src={PhrAssets.PlusAdd} alt="" />
@@ -156,6 +157,8 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
             )}
 
           </div>
+=======
+>>>>>>> c623545 (Updated Dental)
         </div>
         <p className="border border-gray-300 px-2 my-3"></p>
 

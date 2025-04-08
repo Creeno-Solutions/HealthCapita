@@ -5,7 +5,7 @@ import Optical from "./Optical";
 import Prosthesis from "./Prosthesis";
 import Vaccination from "./Vaccination";
 import FamilyMedicalHistory from "./familyMedicalHistory";
-import { PhrAssets } from "../../../../assets/PHR/assets";
+
 import { useState } from "react";
 
 const OtherHistory = () => {

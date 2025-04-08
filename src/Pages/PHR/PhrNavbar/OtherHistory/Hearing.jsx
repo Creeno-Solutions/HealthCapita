@@ -4,7 +4,7 @@ import Update from "../../../../CommonComponents/Update/Update";
 const Hearing = () => {
   const navigate = useNavigate();
   const openHearingupdatePage = () => {
-    window.scrollTo({ top: 0, behavious: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     navigate("/otherHistoryFields", { state: { activeTab: 1 } });
   };
   const data = [
