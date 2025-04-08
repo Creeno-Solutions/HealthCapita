@@ -68,7 +68,7 @@ const MedicationAndreminders = ({ showFields,recordIdKey,recordId,fetchDataUrl,s
   const HandleDelete = async (prescribedMedicationsId) => {
     try {
       const deleteResponse = await axios.post(`${deleteUrl}=${prescribedMedicationsId}&userId=${id}`);
-   console.log('bloodsugar',deleteResponse?.data?.success)
+   console.log('medical history response',deleteResponse?.data)
       if (deleteResponse?.data?.success) {
         const fetchResponse = await axios.get(`${fetchDataUrl}?userId=${id}&${recordIdKey}=${recordId}`);
         console.log('fetch response...',fetchResponse)

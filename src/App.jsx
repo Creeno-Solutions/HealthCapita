@@ -29,13 +29,9 @@ import TriglyceridesUpdate from "./Pages/PHR/PhrNavbar/LifeStyle/TrackingHealth/
 import WeightUpdate from "./Pages/PHR/PhrNavbar/LifeStyle/TrackingHealth/Weight/WeightUpdate";
 import MedicalAndSurgeryUpdate from "./Pages/PHR/PhrNavbar/MedicalSurgery/MedicalAndSurgeryUpdate";
 import MedicalAndSurgery from "./Pages/PHR/PhrNavbar/MedicalSurgery/MedicalAndSurgery";
-import Dentalupdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/DentalUpdate";
-import Hearingupdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/HearingUpdate";
-import ImmunizationUpdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/ImmunizationUpdate";
-import OpticalUpdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/OpticalUpdate";
-import FamilyMedicalHistoryUpdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/FamilyMedicalHistoryUpdate";
-import ProsthesisUpdate from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/ProsthesisUpdate";
-import OtherHistoryFields from "./Pages/PHR/PhrNavbar/OtherHistory/OtherHistoryFields/OtherHistoryFields";
+import MainPhrNavbar from "./Pages/PHR/PhrNavbar/MainPhrNavbar/MainPhrNavbar";
+import MainLifeStyle from "./Pages/PHR/PhrNavbar/LifeStyle/MainLifeStyle";
+import User from "./Pages/PHR/User";
 
 function App() {
   const location = useLocation();
@@ -44,7 +40,6 @@ function App() {
   console.log(HideHeaderandFooter);
   return (
     <>
-
       {!HideHeaderandFooter && <Header />}
       <Routes>
         <Route path="/" element={<Navigate to="/Login" />} />
@@ -93,20 +88,16 @@ function App() {
         />
         <Route path="/PhrWeightUpdate" element={<WeightUpdate />} />
         <Route
-          path="/PhrMedicalAndSUrgeryUpdate" 
+          path="/PhrMedicalAndSUrgeryUpdate"
           element={<MedicalAndSurgeryUpdate />}
         />
-        <Route path="/phr/MedicalAndSurgery" element={<MedicalAndSurgery />} />
-        <Route path="/dentalUpdatePage" element={<Dentalupdate />} />
-        <Route path="/hearingUpdate" element={<Hearingupdate />} />
-        <Route path="/immunizationUpdte" element={<ImmunizationUpdate />} />
-        <Route path="/opticalUpdate" element={<OpticalUpdate />} />
-        <Route path="/ProsthesisUpdate" element={<ProsthesisUpdate />} />
         <Route
-          path="/familyMedicalHistoryUpdate"
-          element={<FamilyMedicalHistoryUpdate />}
+          path="/phr/mainphrNavbar/MedicalAndSurgery"
+          element={<MedicalAndSurgery />}
         />
-        <Route path="/otherHistoryFields" element={<OtherHistoryFields />} />
+        <Route path="/phr/mainphrNavbar" element={<MainPhrNavbar />} />
+        <Route path="/phr/user/mainLifeStyle" element={<MainLifeStyle />} />
+        <Route path="/user" element={<User />} />
       </Routes>
 
       {!HideHeaderandFooter && <Footer />}
