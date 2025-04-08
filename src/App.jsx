@@ -93,7 +93,7 @@ function App() {
         />
         <Route path="/PhrWeightUpdate" element={<WeightUpdate />} />
         <Route
-          path="/PhrMedicalAndSUrgeryUpdate"
+          path="/PhrMedicalAndSUrgeryUpdate" 
           element={<MedicalAndSurgeryUpdate />}
         />
         <Route path="/phr/MedicalAndSurgery" element={<MedicalAndSurgery />} />

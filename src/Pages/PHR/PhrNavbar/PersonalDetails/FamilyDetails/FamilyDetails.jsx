@@ -145,7 +145,6 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
               Family Details
             </p>
           </div>
-<<<<<<< HEAD
           {showAddButton && (
             <PlusAddBtn onClick={openFamilyDetailsUpdatePage} />
           )}
@@ -155,8 +154,8 @@ const FamilyDetails = ({ showUpdateButton = true, showAddButton = true }) => {
             {showAddButton && (
               <PlusAddBtn onClick={openFamilyDetailsUpdatePage} />
             )}
+
           </div>
->>>>>>> b929df9133c828fc1a011a81ca8f147224b17ed1
         </div>
         <p className="border border-gray-300 px-2 my-3"></p>
 
