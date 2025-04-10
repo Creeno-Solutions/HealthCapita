@@ -21,7 +21,10 @@ import Archives from './Archives.svg'
 import JohnProfile from './JohnProfile.svg'
 import Qrcode from './Qrcode.svg'
 import MainLogo from './MainLogo.svg'
-
+import FamilyMember from './FamilyMember.svg'
+import HealthCard from './HealthCard.svg'
+import Scheduler from './Scheduler.svg'
+import Logo from './Logo.svg'
 export const HomeAssets = {
     bell,
     ellipse,
@@ -45,5 +48,10 @@ export const HomeAssets = {
     Archives,
     JohnProfile,
     Qrcode,
-    MainLogo
+    MainLogo,
+    FamilyMember,
+    HealthCard,
+    Scheduler,
+    Logo
+
 }

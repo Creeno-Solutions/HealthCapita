@@ -66,7 +66,14 @@ import Afternoon from './Afternoon.svg'
 import Night from './Night.svg'
 import AddPrescribedIcon from './AddPrescribedIcon.svg'
 import AddMedicalIcon from './AddMedicalIcon.svg'
-
+import Close from './Close.svg'
+import AddReminders from './AddReminders.svg'
+import Report from './Report.svg'
+import Sad from './Sad.svg'
+import Happy from './Happy.svg'
+import VeryHappy from './VeryHappy.svg'
+import ExtremeHappy from './ExtremeHappy.svg' 
+import PlusAdd from './PlusAdd.svg'
  export const PhrAssets = {
    Profile, 
    Bloodgroup_icon,
@@ -136,5 +143,13 @@ import AddMedicalIcon from './AddMedicalIcon.svg'
    Afternoon,
    Night,
    AddPrescribedIcon,
-   AddMedicalIcon
+   AddMedicalIcon,
+   Close,
+   AddReminders,
+   Report,
+   Sad,
+   Happy,
+   VeryHappy,
+   ExtremeHappy,
+   PlusAdd
 }

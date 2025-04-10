@@ -2,6 +2,8 @@ import { useState } from "react";
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/Slices/userSlice";
 
 const RightSide = () => {
   const [activeTab, setActiveTab] = useState("Email");
@@ -10,6 +12,7 @@ const RightSide = () => {
     email:'',
     password:''
   })
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
 const handleChange = (e)=>{
@@ -21,7 +24,7 @@ const submitHandler = async(e)=>{
 e.preventDefault()
 try{
 const response = await axios.post(`https://service.healthcapita.com/api/Account/Login?Email=${formData.email}&password=${formData.password}`)
-console.log(response)
+dispatch(setUser(response?.data?.data))
  if(response?.data?.status) navigate('/Dashboard'), toast.success('Login successfully')
 }catch(error){
   console.log(error)

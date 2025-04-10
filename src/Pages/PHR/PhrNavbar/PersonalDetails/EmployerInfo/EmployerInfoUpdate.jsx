@@ -1,155 +1,169 @@
 import { useNavigate } from "react-router-dom";
 import { PhrAssets } from "../../../../../assets/PHR/assets";
+import { useState } from "react";
+import axios from "axios";
+import UserInfo from "../../../../../utils/UserInfo";
+import PhrUpdateHeader from "../../../../../CommonComponents/PhrUpdateHeader/PhrUpdateHeader";
+import PhrProtectwithPassword from "../../../../../CommonComponents/PhrUpdateHeader/PhrProtectwithPassword";
+import UpdateDetailsBtn from "../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
 
 const EmployerInfoUpdate = () => {
-  const navigate = useNavigate();
+  const userId = UserInfo();
+  const [formData, setFormData] = useState({
+    userId: userId,
+    employeeId: 0,
+    employerName: "",
+    employeeCategory: "",
+    offAddress: "",
+    cityId: "",
+    otherCity: "",
+    stateid: "1",
+    otherState: "",
+    countryid: "",
+    pinCode: "",
+    phone: "",
+    countryCode: "",
+    isPasswordProtected: false,
+    isDisplayUnderSummaryPage: false,
+  });
 
-  const closePage = () => {
-    navigate("/phr");
+  const handleChange = (e) => {
+    const { name, type, checked, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  const AddressformFields = 
-    [
-      {
-        id: "category",
-        label: "Category",
-        type: "select",
-        options: ["Salaried", "Unpaid"],
-        placeholder: "Select",
-      },
-      {
-        id: "name",
-        label: "Employer Name",
-        type: "text",
-        placeholder: "Enter your Employer Name",
-      },
-      {
-        id: "landlineno",
-        label: "Landline No.",
-        type: "phone",
-        countryCodes: ["+1", "+91", "+44", "+61", "+81"],
-        placeholder: "Enter Landline No.",
-      },
-      {
-        id: "country",
-        label: "Country",
-        type: "select",
-        options: ["India", "USA", "UK"],
-        placeholder: "Select",
-      },
-      {
-        id: "governate",
-        label: "Governte",
-        type: "select",
-        options: ["Northern Governate", "Southern Governate"],
-        placeholder: "Select",
-      },
-      {
-        id: "area",
-        label: "Area",
-        type: "select",
-        options: ["A Ali", "JNTU"],
-        placeholder: "Select",
-      },
-      
-      {
-        id: "pobox",
-        label: "P.O. Box",
-        type: "number",
-        placeholder: "Enter P.O. Box",
-      },
-      {
-        id: "address",
-        label: "Address",
-        type: "text",
-        placeholder: "Enter your Address here..",
-      },
-    ]
-  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "https://service.healthcapita.com/api/PHR/SaveEmploymentInformation",
+        formData
+      );
+    } catch (error) {
+      console.error("Error saving contact information", error);
+    }
+  };
   return (
     <>
       <div className="min-h-screen bg-white flex flex-col">
         {/* Header */}
-        <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-4 px-4 sm:px-6 md:px-4 lg:px-12 bg-[#001940] shadow-md w-full">
-          <div className="flex items-center space-x-3">
-            <img src={PhrAssets.PhrIcon} alt="Logo" className="w-8 h-8" />
-            <p className="border border-r-0 h-6 border-white"></p>
-            <h2 className="md:text-3xl text-xl font-semibold text-white">
-              Edit Personal Health Record
-            </h2>
-          </div>
-
-          <button
-            onClick={closePage}
-            className="text-white text-xl font-semibold tracking-wide"
-          >
-            X <span className="hidden md:inline">Close</span>
-          </button>
-        </header>
-
-        {/* Main Section */}
-        <div className="px-2 md:p-5 xl:px-10 lg:px-4 sm:px-4 w-full">
-          {/* Medical & Surgery */}
-          <div className="pt-3 sm:pt-0 flex flex-col sm:flex-row sm:justify-between sm:mx-3 sm:items-center gap-3">
-            <div className="flex flex-row sm:justify-between items-center gap-2">
-              <img
-                onClick={closePage}
-                className="text-black sm:w-6 cursor-pointer"
-                src={PhrAssets.ArrowLeft}
-                alt=""
-              />
-              <p className="border h-5 sm:h-6 sm:border-l-0 border-l-0 border-gray-400"></p>
-              <h2 className="md:text-xl text-base lg:text-2xl leading-5 font-semibold">
-                Employment Information
-              </h2>
-              <img
-                className="lg:mt-1 h-5 w-5 sm:w-6 sm:h-6 md:w-6 md:h-6 lg:w-6"
-                src={PhrAssets.InfoCircle}
-                alt=""
-              />
-            </div>
-          </div>
-          <p className="mx-2 border-b-2 border-gray-100 mt-4"></p>
-        </div>
-
+        <PhrUpdateHeader />
+        <PhrProtectwithPassword
+          Title="Employer Info"
+          isProtected={formData.isPasswordProtected}
+          isDisplayed={formData.isDisplayUnderSummary}
+          onProtectChange={handleChange}
+          onDisplayChange={handleChange}
+        />
         <div className="py-4 px-4 sm:px-6 md:px-4 lg:px-12">
-        <form className="flex flex-col gap-4 p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {AddressformFields.map((field) => (
-          <div key={field.id} className="flex flex-col gap-2">
-            <label htmlFor={field.id} className="font-normal">
-              {field.label}
-            </label>
-            {field.type === "select" ? (
-              <select
-                id={field.id}
-                name={field.id}
-                className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none"
-              >
-                <option value="">{field.placeholder}</option>
-                {field.options.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <input
-                type={field.type}
-                placeholder={field.placeholder}
-                id={field.id}
-                name={field.id}
-                className="border border-gray-300 py-2 px-3 rounded-md focus:outline-none w-3/4"
-              />
-            )}
-          </div>
-        ))}
-      </div>
-      <div>
-        <button className="text-green-700 font-semibold">+ Add</button>
-      </div>
+          <form className="flex flex-col gap-4 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="flex flex-col gap-2">
+                <label className="font-normal">Category</label>
+                <select
+                  name="employeeCategory"
+                  value={formData.employeeCategory}
+                  onChange={handleChange}
+                  className="border  border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none"
+                >
+                  <option value="">Select</option>
+                  <option value="Salaried">Salaried</option>
+                  <option value="Unpaid">Unpaid</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-normal">Employer Name</label>
+                <input
+                  type="text"
+                  name="employerName"
+                  value={formData.employerName}
+                  onChange={handleChange}
+                  className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none"
+                  placeholder="Enter Your Employer Name"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-normal">Landline No.</label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none"
+                  placeholder="Enter Landline No."
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-normal">Country</label>
+                <select
+                  name="countryid"
+                  value={formData.countryid}
+                  onChange={handleChange}
+                  className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none"
+                >
+                  <option value="">Select</option>
+                  <option value="2">India</option>
+                  <option value="3">USA</option>
+                  <option>UK</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-normal">Governate</label>
+                <select
+                  name="cityId"
+                  value={formData.cityId}
+                  onChange={handleChange}
+                  className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none"
+                >
+                  <option value="">Select</option>
+                  <option value="2">Northern Governate</option>
+                  <option value="3">Southern Governate</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-normal">Area</label>
+                <select
+                  name="countryCode"
+                  value={formData.countryCode}
+                  onChange={handleChange}
+                  className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none"
+                >
+                  <option value="">Select</option>
+                  <option value="1">A Ali</option>
+                  <option value="2">JNTU</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-normal">P.O. Box</label>
+                <input
+                  type="number"
+                  name="pinCode"
+                  value={formData.pinCode}
+                  onChange={handleChange}
+                  className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none"
+                  placeholder="Enter P.O. Box"
+                />
+              </div>
+              <div className="flex flex-col col-span-2">
+                <label className="font-normal">Address</label>
+                <textarea
+                  type="text"
+                  name="offAddress"
+                  value={formData.offAddress}
+                  onChange={handleChange}
+                  className="border border-gray-300 py-2 px-3 rounded-md w-[725px] focus:outline-none"
+                  placeholder="Enter Address"
+                />
+              </div>
+            </div>
+            <div className="my-5">
+              <UpdateDetailsBtn onClick={handleSubmit} />
+            </div>
           </form>
-          </div>
+        </div>
       </div>
     </>
   );

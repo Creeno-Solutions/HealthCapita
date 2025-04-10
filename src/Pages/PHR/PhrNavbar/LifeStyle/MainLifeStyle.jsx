@@ -21,7 +21,8 @@ const MainLifeStyle = () => {
       case 0:
         return <LifeStyle />;
       case 1:
-        return <PhrBloodPressure />;
+  // const [activeTab, setActiveTab] = useState(0);
+        return <PhrBloodPressure  setActiveTab={setActiveTab}  setShowTrackingHealth={setShowTrackingHealth}/>;
       case 2:
         return <PhrBloodSugar />;
       case 3:

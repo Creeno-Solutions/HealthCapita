@@ -9,15 +9,15 @@ import PhrProfile from "../PersonalDetails/PhrProfile/PhrProfile";
 const Summary = () => {
   return (
     <>
-      <div  className="px-12">
+      <div className="px-12">
         <h2 className="text-2xl font-semibold py-3">Personal Details</h2>
-        <PhrProfile showUpdateButton={false}/>
+        <PhrProfile showUpdateButton={false} />
         <InsuranceDetails showUpdateButton={false} />
-        <EmployerInfo showUpdateButton={false}/>
-        <FamilyDetails showUpdateButton={false}/>
-        <EmergencyContactInfo showUpdateButton={false}/>
-        <MedicalContacts showUpdateButton={false}/>
-        <Allergies showUpdateButton={false}/>
+        <EmployerInfo showUpdateButton={false} />
+        <FamilyDetails showUpdateButton={false} />
+        <EmergencyContactInfo showUpdateButton={false} />
+        <MedicalContacts showUpdateButton={false} />
+        <Allergies showUpdateButton={false} />
       </div>
     </>
   );

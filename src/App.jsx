@@ -29,6 +29,9 @@ import TriglyceridesUpdate from "./Pages/PHR/PhrNavbar/LifeStyle/TrackingHealth/
 import WeightUpdate from "./Pages/PHR/PhrNavbar/LifeStyle/TrackingHealth/Weight/WeightUpdate";
 import MedicalAndSurgeryUpdate from "./Pages/PHR/PhrNavbar/MedicalSurgery/MedicalAndSurgeryUpdate";
 import MedicalAndSurgery from "./Pages/PHR/PhrNavbar/MedicalSurgery/MedicalAndSurgery";
+import MainPhrNavbar from "./Pages/PHR/PhrNavbar/MainPhrNavbar/MainPhrNavbar";
+import MainLifeStyle from "./Pages/PHR/PhrNavbar/LifeStyle/MainLifeStyle";
+import User from "./Pages/PHR/User";
 
 function App() {
   const location = useLocation();
@@ -88,7 +91,13 @@ function App() {
           path="/PhrMedicalAndSUrgeryUpdate"
           element={<MedicalAndSurgeryUpdate />}
         />
-        <Route path="/phr/MedicalAndSurgery" element={<MedicalAndSurgery />} />
+        <Route
+          path="/phr/mainphrNavbar/MedicalAndSurgery"
+          element={<MedicalAndSurgery />}
+        />
+        <Route path="/phr/mainphrNavbar" element={<MainPhrNavbar />} />
+        <Route path="/phr/user/mainLifeStyle" element={<MainLifeStyle />} />
+        <Route path="/user" element={<User />} />
       </Routes>
 
       {!HideHeaderandFooter && <Footer />}

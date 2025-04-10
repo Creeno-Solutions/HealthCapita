@@ -3,12 +3,14 @@ import { useEffect, useState,useContext } from "react";
 import Button from "../../../CommonComponents/Button";
 import axios from "axios";
 import { HraApiEndPoints } from "../../../utils/HraApis";
-import { UserId } from "../../../utils/HraApis";
 import { DateContext } from "../../../utils/DateProvider";
+import { useSelector } from "react-redux";
 
 const BodyStructure = ({ onNext,showProgressSaved}) => {
   const {selectedDate}=  useContext(DateContext)
   const [errors, setErrors] = useState({});
+  const UserId = useSelector((state) => state?.user?.user?.userId)
+
   console.log(selectedDate)
  
   const [formData, setFormData] = useState({

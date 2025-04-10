@@ -1,170 +1,153 @@
 import { useNavigate } from "react-router-dom";
 import { PhrAssets } from "../../../../../assets/PHR/assets";
-
+import { useState } from "react";
+import axios from "axios";
+import PhrUpdateHeader from "../../../../../CommonComponents/PhrUpdateHeader/PhrUpdateHeader";
+import PhrProtectwithPassword from "../../../../../CommonComponents/PhrUpdateHeader/PhrProtectwithPassword";
+import UserInfo from "../../../../../utils/UserInfo";
+import UpdateDetailsBtn from "../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
 
 const EmergencyContactUpdate = () => {
   const navigate = useNavigate();
+  const userId = UserInfo();
+
+  const [formData, setFormData] = useState({
+    emergencyContactId: 0,
+    userId: userId,
+    name: "",
+    countryId: "",
+    relation: "",
+    mobile: "",
+    emailId: "",
+    isPasswordProtected: false,
+    isDisplayUnderSummaryPage: false,
+    status: 0,
+  });
 
   const closePage = () => {
     navigate("/phr");
   };
 
+  const handleChange = (e) => {
+    const { name, type, checked, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
 
-  const formFields = [
-    {
-      id: "name",
-      label: "Name",
-      type: "text",
-      placeholder: "Enter your name",
-    },
-    {
-      id: "relation",
-      label: "Relation",
-      type: "text",
-      placeholder: "Enter Relation",
-    },
-    {
-      id: "mobilenumber",
-      label: "Mobile Number",
-      type: "phone",
-      countryCodes: ["+91", "+1", "+44", "+61", "+81"],
-      placeholder: "Enter Mobile Number",
-    },
-    {
-      id: "country",
-      label: "Country",
-      type: "select",
-      options: ["India", "USA", "UK"],
-      placeholder: "Select",
-    },
-    {
-      id: "email",
-      label: "Email",
-      type: "email",
-      placeholder: "Enter Your Email",
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // You can handle form submission here (e.g., make an API call)
+    try {
+      const response = await axios.post("https://service.healthcapita.com/api/PHR/SaveEmergencyContactInformation", formData);
+
+      if (response?.data?.status) {
+        closePage();
+      }
+    } catch (error) {
+      console.log(error);
     }
-  ]
+  };
 
   return (
     <>
       <div className="min-h-screen bg-white flex flex-col">
         {/* Header */}
-        <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-4 px-4 sm:px-6 md:px-4 lg:px-12 bg-[#001940] shadow-md w-full">
-          <div className="flex items-center space-x-3">
-            <img src={PhrAssets.PhrIcon} alt="Logo" className="w-8 h-8" />
-            <p className="border border-r-0 h-6 border-white"></p>
-            <h2 className="md:text-3xl text-xl font-semibold text-white">
-              Edit Personal Health Record
-            </h2>
-          </div>
 
-          <button
-            onClick={closePage}
-            className="text-white text-xl font-semibold tracking-wide"
-          >
-            X <span className="hidden md:inline">Close</span>
-          </button>
-        </header>
-
-        {/* Main Section */}
-        <div className="px-2 md:p-5 xl:px-10 lg:px-4 sm:px-4 w-full">
-          {/* Medical & Surgery */}
-          <div className="pt-3 sm:pt-0 flex flex-col sm:flex-row sm:justify-between sm:mx-3 sm:items-center gap-3">
-            <div className="flex flex-row sm:justify-between items-center gap-2">
-              <img
-                onClick={closePage}
-                className="text-black sm:w-6 cursor-pointer"
-                src={PhrAssets.ArrowLeft}
-                alt=""
-              />
-              <p className="border h-5 sm:h-6 sm:border-l-0 border-l-0 border-gray-400"></p>
-              <h2 className="md:text-xl text-base lg:text-2xl leading-5 font-semibold">
-                Emergency Contact
-              </h2>
-              <img
-                className="lg:mt-1 h-5 w-5 sm:w-6 sm:h-6 md:w-6 md:h-6 lg:w-6"
-                src={PhrAssets.InfoCircle}
-                alt=""
-              />
-            </div>
-          </div>
-          <p className="mx-2 border-b-2 border-gray-100 mt-4"></p>
+        <div>
+          <PhrUpdateHeader />
+          <PhrProtectwithPassword
+            Title="Emergency Contact"
+            isProtected={formData.isPasswordProtected}
+            isDisplayed={formData.isDisplayUnderSummaryPage}
+            onProtectChange={handleChange}
+            onDisplayChange={handleChange}
+          />
         </div>
 
         <div className="py-4 px-4 sm:px-6 md:px-4 lg:px-12">
-        <form className="flex flex-col gap-4 p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ">
-        {formFields.map((field) => (
-          <div key={field.id} className="flex flex-col gap-2">
-            <label htmlFor={field.id} className="font-normal">
-              {field.label}
-            </label>
-
-            {/* Select Dropdown */}
-            {field.type === "select" ? (
-              <select
-                id={field.id}
-                name={field.id}
-                className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none"
-              >
-                <option value="">{field.placeholder}</option>
-                {field.options.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            ) : field.type === "phone" ? (
-              // Phone Number with Country Code
-              <div className="flex gap-2 w-3/4">
-                <select
-                  id={`${field.id}-code`}
-                  name={`${field.id}-code`}
-                  className="border border-gray-300 py-2 px-3 rounded-md w-15 focus:outline-none"
-                >
-                  {field.countryCodes.map((code) => (
-                    <option key={code} value={code}>
-                      {code}
-                    </option>
-                  ))}
-                </select>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="name" className="font-normal">
+                  Name
+                </label>
                 <input
-                  type="number"
-                  placeholder={field.placeholder}
-                  id={field.id}
-                  name={field.id}
-                  className="border border-gray-300 py-2 px-3 flex-1 rounded-md focus:outline-none w-3/4"
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter Your Name"
+                  className="border border-gray-300 py-2 px-3 rounded-md focus:outline-none w-3/4"
                 />
               </div>
-            ) : (
-              // Other Input Fields
-              <input
-                type={field.type}
-                placeholder={field.placeholder}
-                id={field.id}
-                name={field.id}
-                className="border border-gray-300 py-2 px-3 rounded-md  focus:outline-none w-3/4"
+              <div className="flex flex-col gap-2">
+                <label htmlFor="relation" className="font-normal">
+                  Relation
+                </label>
+                <input
+                  type="text"
+                  name="relation"
+                  value={formData.relation}
+                  onChange={handleChange}
+                  placeholder="Enter Relation"
+                  className="border border-gray-300 py-2 px-3 rounded-md focus:outline-none w-3/4"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="mobilenumber" className="font-normal">
+                  Mobile Number
+                </label>
+                <div className="flex  w-3/4">
+                  <select className="border border-gray-300 py-2 rounded-s-md w-15 focus:outline-none bg-[#F9FAFB]">
+                    <option>+91</option>
+                    <option>+1</option>
+                    <option>+44</option>
+                    <option>+61</option>
+                    <option>+81</option>
+                  </select>
+                  <input
+                    type="number"
+                    value={formData.mobile}
+                    name="mobile"
+                    onChange={handleChange}
+                    placeholder="Enter Mobile Number"
+                    className="border border-gray-300 py-2 px-3 flex-1 rounded-e-md border-l-0 focus:outline-none w-3/4"
                   />
-            )}
-          </div> 
-        ))}
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="country" className="font-normal">
+                  Country
+                </label>
+                <select name="countryId" value={formData.countryId} onChange={handleChange} className="border border-gray-300 py-2 px-3 rounded-md w-3/4 focus:outline-none">
+                  <option value="1">Select</option>
+                  <option value="2">India</option>
+                  <option value="3">USA</option>
+                  <option value="4">UK</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="email" className="font-normal">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="emailId"
+                  value={formData.emailId}
+                  onChange={handleChange}
+                  placeholder="Enter Your Email"
+                  className="border border-gray-300 py-2 px-3 rounded-md focus:outline-none w-3/4"
+                />
+              </div>
             </div>
-            
-        <div>
-          <button className="text-green-700 font-semibold">+ Add</button>
+          </form>
         </div>
-    </form>
-          </div>
 
         <div className="relative">
-        <p className="mx-14 border-b-2 border-gray-100 my-5"></p>
-        <button
-          
-          className="bg-[#1C9401] text-white font-medium tracking-wide text-lg py-3 px-8 rounded-full absolute -bottom-20 right-8 mb-0 mr-4"
-        >
-          Update Details
-        </button>
-      </div>
+          <UpdateDetailsBtn onClick={handleSubmit} />
+        </div>
       </div>
     </>
   );

@@ -1,53 +1,80 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PhrAssets } from "../../../../../../assets/PHR/assets";
 import AddBtn from "../../../../../../CommonComponents/AddBtn/AddBtn";
 import { useNavigate } from "react-router-dom";
+import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
+import axios from "axios";
 
 const PhrWeight = () => {
-
-  const navigate = useNavigate()
-
-  const openWeightUpdatePage = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate('/PhrWeightUpdate')
-  }
-  const [optionsVisible, setOptionsVisible] = useState(null);
-  const [dropdownVisible, setDropdownVisible] = useState(null);
-  const data = [
-    {
-      id: 1,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      weight: "--",
-    },
-    {
-      id: 2,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      weight: "--",
-    },
-    {
-      id: 3,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      weight: "--",
-    },
-    {
-      id: 4,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      weight: "--",
-    },
-  ];
-
-  const toggleOptions = (id) => {
-    setOptionsVisible((prev) => (prev === id ? null : id));
+  const navigate = useNavigate();
+  const userId = 10;
+  const openWeightAddPage = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/PhrWeightUpdate");
   };
 
-  const handleOptionClick = (option, id) => {
-    console.log(`Option "${option}" selected for row ID ${id}`);
-    setDropdownVisible(null);
+  const openWeightUpdatePage = (WeightId) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/PhrWeightUpdate", { state: { WeightId } });
   };
+
+  const handleDelete = async (WeightId) => {
+    try {
+      const response = await axios.post(
+        `https://service.healthcapita.com/api/PHR/DeletePhrWeightById?WeightId=${WeightId}&userId=${userId}`
+
+      );
+      // console.log("deleteWeight", response?.data?.status);
+      if (response?.data?.success) {
+        const deletedData = await axios.get(
+          `https://service.healthcapita.com/api/PHR/GetPhrWeight?userId=${userId}`
+        );
+        setData(deletedData?.data?.data || []);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [showWeightForm, setWeightForm] = useState(false);
+  const [data, setData] = useState([]);
+  const [selectedContact, setSelectedContact] = useState({});
+
+  const openWeightForm = async (WeightId) => {
+    setWeightForm(true);  
+    try {
+      const response = await axios.get(
+        `https://service.healthcapita.com/api/PHR/GetWeightById/${WeightId}/${userId}`
+      );
+      // console.log(response?.data?.response);
+      if (response?.data?.status) {
+        setSelectedContact(response?.data?.response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const closeWeightForm = () => {
+    setWeightForm(false);
+  };
+
+  useEffect(() => {
+    const getApiData = async () => {
+      try {
+        const response = await axios.get(
+          `https://service.healthcapita.com/api/PHR/GetPhrWeight?userId=${userId}`
+        );
+        // console.log("weight", response?.data?.status);
+        if (response?.data?.status) {
+          setData(response?.data?.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getApiData();
+  }, []);
   return (
     <>
       <div className="py-3 px-2 bg-[#F9FAFB] rounded-md">
@@ -62,7 +89,7 @@ const PhrWeight = () => {
               Weight
             </p>
           </div>
-          <AddBtn onClick={openWeightUpdatePage} />
+          <AddBtn onClick={openWeightAddPage} />
         </div>
         <p className="border border-gray-300 px-2 my-4"></p>
 
@@ -83,28 +110,36 @@ const PhrWeight = () => {
             <tbody>
               {data.map((item) => (
                 <tr key={item.id}>
-                  <td className="pl-1 py-4 text-sm text-gray-900 border-b">
+                  <td className="pl-1 py-4 text-sm text-gray-900 border-b cursor-pointer">
                     <img
-                      src={item.icon}
-                      onClick={() => toggleOptions(item.id)}
+                      src={PhrAssets.ThreeDotted}
+                      onClick={() => openWeightForm(item.WeightId)}
                       alt="Options"
                       className="w-6 h-6"
                     />
                   </td>
-                  <td className="px-4 py-4 text-base text-[#004EBA] border-b font-semibold">
-                    {item.date}
+                  <td
+                    className="px-4 py-4 text-base text-[#004EBA] border-b font-semibold cursor-pointer"
+                    onClick={() => openWeightForm(item.WeightId)}
+                  >
+                    {item.TestDate}
                   </td>
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
-                    {item.weight}
+                    {item.KiloGram}
                   </td>
 
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
                     <div className="flex gap-4 items-center">
-                      <button onClick={openWeightUpdatePage}>
+                      <button
+                        onClick={() => openWeightUpdatePage(item.WeightId)}
+                      >
                         <img src={PhrAssets.Edit} alt="" />
                       </button>
 
-                      <button className="flex gap-1 items-center  font-semibold">
+                      <button
+                        className="flex gap-1 items-center  font-semibold"
+                        onClick={() => handleDelete(item.WeightId)}
+                      >
                         <img src={PhrAssets.Delete} alt="" />
                       </button>
                     </div>
@@ -115,6 +150,62 @@ const PhrWeight = () => {
           </table>
         </div>
       </div>
+
+      {showWeightForm && selectedContact && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[50%] relative overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+            <div className="pt-2 px-6 mx-auto pb-10">
+              <div className="flex justify-between items-center">
+                <h2 className="font-semibold text-2xl">Weight Information</h2>
+                <img
+                  src={PhrAssets.Close}
+                  alt=""
+                  onClick={closeWeightForm}
+                  className="cursor-pointer"
+                />
+              </div>
+              <p className=" border border-b-1 border-gray-400 my-6"></p>
+
+              <div className="grid sm:grid-cols-3 gap-8 mb-4">
+                <div className="flex flex-col gap-1">
+                  <p>Weight(Kgs)</p>
+                  <p className="font-semibold">{selectedContact.kiloGram}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Date of Entry</p>
+                  <p className="font-semibold">{selectedContact.testDate}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Physician Specialist</p>
+                  <p className="font-semibold">
+                    {selectedContact.physicianSpecialist}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Primary Care Physician</p>
+                  <p className="font-semibold">
+                    {selectedContact.primaryCarePhysician}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Comments</p>
+                  <p className="font-semibold">{selectedContact.comments}</p>
+                </div>
+              </div>
+
+              <div>
+                <UpdateDetailsBtn
+                  onClick={() => openWeightUpdatePage(selectedContact.weightId)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

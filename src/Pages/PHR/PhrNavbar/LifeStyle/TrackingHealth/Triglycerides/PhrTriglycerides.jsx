@@ -1,53 +1,81 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PhrAssets } from "../../../../../../assets/PHR/assets";
 import AddBtn from "../../../../../../CommonComponents/AddBtn/AddBtn";
 import { useNavigate } from "react-router-dom";
+import UpdateDetailsBtn from "../../../../../../CommonComponents/UpdateDetailsBtn/UpdateDetailsBtn";
+import axios from "axios";
 
 const PhrTriglycerides = () => {
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-
-  const openTriglyceridesUpdatePage = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate('/PhrTriglyceridesUpdate')
-  }
-  const [optionsVisible, setOptionsVisible] = useState(null);
-  const [dropdownVisible, setDropdownVisible] = useState(null);
-  const data = [
-    {
-      id: 1,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      triglyceridesLevel: "--",
-    },
-    {
-      id: 2,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      triglyceridesLevel: "--",
-    },
-    {
-      id: 3,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      triglyceridesLevel: "--",
-    },
-    {
-      id: 4,
-      icon: PhrAssets.ThreeDotted,
-      date: "October 15, 2024",
-      triglyceridesLevel: "--",
-    },
-  ];
-
-  const toggleOptions = (id) => {
-    setOptionsVisible((prev) => (prev === id ? null : id));
+  const openTriglyceridesAddPage = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/PhrTriglyceridesUpdate");
+  };
+  const userId = 10;
+  const openTriglyceridesUpdatePage = (BloodTriglyceridesId) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/PhrTriglyceridesUpdate", { state: { BloodTriglyceridesId } });
   };
 
-  const handleOptionClick = (option, id) => {
-    console.log(`Option "${option}" selected for row ID ${id}`);
-    setDropdownVisible(null);
+  const handleDelete = async (BloodTriglyceridesId) => {
+    try {
+      const response = await axios.post(
+        `https://service.healthcapita.com/api/PHR/delete/BloodTriglycerides/${BloodTriglyceridesId}/${userId}`
+       
+      );
+      
+      if (response?.data?.success) {
+        const deletedData = await axios.get(
+          `https://service.healthcapita.com/api/PHR/GetPhrTriGlyCeride?userId=${userId}`
+        );
+        setData(deletedData?.data?.data || []);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const [showTriglyceridesForm, setTriglyceridesForm] = useState(false);
+  const [data, setData] = useState([]);
+  const [selectedContact, setSelectedConatct] = useState({});
+  const add = 2;
+
+  const openTriglyceridesForm = async (BloodTriglyceridesId) => {
+    setTriglyceridesForm(true);
+    try {
+      const response = await axios.get(
+        `https://service.healthcapita.com/api/PHR/GetPhrTriglyceridesById/${BloodTriglyceridesId}/${userId}`
+      );
+      // console.log("triglyceridesFormData", response?.data?.status);
+      if (response?.data?.status) {
+        setSelectedConatct(response?.data?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const closeTriglyceridesForm = () => {
+    setTriglyceridesForm(false);
+  };
+
+  useEffect(() => {
+    const getAPiData = async () => {
+      try {
+        const response = await axios.get(
+          `https://service.healthcapita.com/api/PHR/GetPhrTriGlyCeride?userId=${userId}`
+        );
+        // console.log("triglycerides", response?.data?.status);
+        if (response?.data?.status) {
+          setData(response?.data?.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getAPiData();
+  }, []);
   return (
     <>
       <div className="py-3 px-2 bg-[#F9FAFB] rounded-md">
@@ -62,7 +90,7 @@ const PhrTriglycerides = () => {
               Triglycerides
             </p>
           </div>
-          <AddBtn onClick={openTriglyceridesUpdatePage} />
+          <AddBtn onClick={openTriglyceridesAddPage} />
         </div>
         <p className="border border-gray-300 px-2 my-4"></p>
 
@@ -83,28 +111,42 @@ const PhrTriglycerides = () => {
             <tbody>
               {data.map((item) => (
                 <tr key={item.id}>
-                  <td className="pl-1 py-4 text-sm text-gray-900 border-b">
+                  <td className="pl-1 py-4 text-sm text-gray-900 border-b cursor-pointer">
                     <img
-                      src={item.icon}
-                      onClick={() => toggleOptions(item.id)}
+                      src={PhrAssets.ThreeDotted}
+                      onClick={() =>
+                        openTriglyceridesForm(item.BloodTriglyceridesId)
+                      }
                       alt="Options"
                       className="w-6 h-6"
                     />
                   </td>
-                  <td className="px-4 py-4 text-base text-[#004EBA] border-b font-semibold">
-                    {item.date}
+                  <td
+                    className="px-4 py-4 text-base text-[#004EBA] border-b font-semibold cursor-pointer"
+                    onClick={() =>
+                      openTriglyceridesForm(item.BloodTriglyceridesId)
+                    }
+                  >
+                    {item.TestDate}
                   </td>
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
-                    {item.triglyceridesLevel}
+                    {item.BloodTriglyceridesLevel}
                   </td>
 
                   <td className="px-4 py-4 text-base text-gray-900 border-b">
                     <div className="flex gap-4 items-center">
-                      <button onClick={openTriglyceridesUpdatePage}>
+                      <button
+                        onClick={() =>
+                          openTriglyceridesUpdatePage(item.BloodTriglyceridesId)
+                        }
+                      >
                         <img src={PhrAssets.Edit} alt="" />
                       </button>
 
-                      <button className="flex gap-1 items-center  font-semibold">
+                      <button
+                        className="flex gap-1 items-center  font-semibold"
+                        onClick={() => handleDelete(item.BloodTriglyceridesId)}
+                      >
                         <img src={PhrAssets.Delete} alt="" />
                       </button>
                     </div>
@@ -115,6 +157,68 @@ const PhrTriglycerides = () => {
           </table>
         </div>
       </div>
+
+      {showTriglyceridesForm && selectedContact && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[50%] relative overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+            <div className="pt-2 px-6 mx-auto pb-10">
+              <div className="flex justify-between items-center">
+                <h2 className="font-semibold text-2xl">
+                  Triglycerides Information
+                </h2>
+                <img
+                  src={PhrAssets.Close}
+                  alt=""
+                  onClick={closeTriglyceridesForm}
+                  className="cursor-pointer"
+                />
+              </div>
+              <p className=" border border-b-1 border-gray-400 my-6"></p>
+
+              <div className="grid sm:grid-cols-3 gap-8 mb-4">
+                <div className="flex flex-col gap-1">
+                  <p>Triglycerides Level</p>
+                  <p className="font-semibold">
+                    {selectedContact.bloodTriglyceridesLevel}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Date of Entry</p>
+                  <p className="font-semibold">{selectedContact.testDate}</p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Physician Specialist</p>
+                  <p className="font-semibold">
+                    {selectedContact.physicianSpecialist}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Primary Care Physician</p>
+                  <p className="font-semibold">
+                    {selectedContact.primaryCarePhysician}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <p>Comments</p>
+                  <p className="font-semibold">{selectedContact.comments}</p>
+                </div>
+              </div>
+
+              <div>
+                <UpdateDetailsBtn
+                  onClick={() =>
+                    openTriglyceridesUpdatePage(selectedContact.bloodTriglyceridesId)
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
